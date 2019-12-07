@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TinyRPG
+namespace LateUpdate
 {
     [RequireComponent(typeof(CharacterMotor))]
     public class Controller_Character : Controller

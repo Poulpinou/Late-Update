@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace TinyRPG
+namespace LateUpdate
 {
     [RequireComponent(typeof(NavMeshAgent))]
     public class CharacterMotor : MonoBehaviour

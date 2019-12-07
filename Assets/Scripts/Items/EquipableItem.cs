@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace TinyRPG {
+namespace LateUpdate {
     [CreateAssetMenu(menuName = "TinyRPG/Items/EquipableItem", fileName = "New Equipable Item")]
     public class EquipableItem : Item
     {

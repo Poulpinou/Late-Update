@@ -5,7 +5,7 @@ using UnityEditor;
 using System.Reflection;
 #endif
 
-namespace TinyRPG {
+namespace LateUpdate {
     [CreateAssetMenu(menuName = "TinyRPG/Items/Item", fileName = "New Item", order = 0)]
     public class Item : ScriptableObject
     {

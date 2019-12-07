@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System;
 
-namespace TinyRPG {
+namespace LateUpdate {
     public class InputManager : StaticManager<InputManager>
     {
         #region Serialized Fields

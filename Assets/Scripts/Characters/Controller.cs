@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TinyRPG {
+namespace LateUpdate {
     public abstract class Controller : MonoBehaviour
     {
         #region Serialized Fields

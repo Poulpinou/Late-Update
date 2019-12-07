@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TinyRPG {
+namespace LateUpdate {
     /// <summary>
     /// Base class for every interactable items
     /// </summary>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace TinyRPG {
+namespace LateUpdate {
     public class InventoryUI : MonoBehaviour
     {
         [Header("Relations")]

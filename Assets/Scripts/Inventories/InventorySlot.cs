@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace TinyRPG {
+namespace LateUpdate {
     public class InventorySlot : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler
     {
         #region Serialized Fields

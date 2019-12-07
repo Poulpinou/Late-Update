@@ -7,7 +7,7 @@ using System;
 using UnityEditor;
 #endif
 
-namespace TinyRPG {
+namespace LateUpdate {
     public class Pickable : Interactable
     {
         #region Serialized Fields

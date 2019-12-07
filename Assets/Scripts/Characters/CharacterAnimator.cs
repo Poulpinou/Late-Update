@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace TinyRPG {
+namespace LateUpdate {
     public class CharacterAnimator : MonoBehaviour
     {
         [SerializeField][Range(0,1)] float locomotionAnimationSmoothTime = .1f;

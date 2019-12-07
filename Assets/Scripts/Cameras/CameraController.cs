@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TinyRPG {
+namespace LateUpdate {
     /// <summary>
     /// In game camera behaviour
     /// </summary>

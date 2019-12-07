@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System;
 
-namespace TinyRPG {
+namespace LateUpdate {
     public class Inventory : MonoBehaviour
     {
         #region Serialized Fields
