@@ -66,6 +66,7 @@ namespace LateUpdate {
 
         private void Start()
         {
+            Target = InputManager.CurrentController.transform;
             InputManager.Active.onCurrentControllerChanged.AddListener(OnCurrentControllerChanged);
         }
         #endregion

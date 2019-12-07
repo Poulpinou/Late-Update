@@ -12,6 +12,9 @@ namespace LateUpdate {
         [Header("Raycasts")]
         [SerializeField] int raycastDepth = 100;
         [SerializeField] LayerMask raycastFilter;
+
+        [Header("Controllers")]
+        [SerializeField] Controller defaultController = null; 
         #endregion
 
         #region Private Fields
@@ -106,6 +109,13 @@ namespace LateUpdate {
         private void Update()
         {
             CheckInputsActivity();
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            if (defaultController != null)
+                SetCurrentController(defaultController);
         }
         #endregion
     }
