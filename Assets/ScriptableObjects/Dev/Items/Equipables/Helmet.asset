@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Helmet
   icon: {fileID: 21300000, guid: c07c8d4577cfe21448e409d1777f4455, type: 3}
-  isDefaultItem: 0
   pickable: {fileID: 2173917568831191523, guid: 56d71e1e564db1d47b0eb1b084d2adf8,
     type: 3}
+  inventorySize: {x: 1, y: 1}
+  stackLimit: 1
+  encumbrance: 2
   skinnedMesh: {fileID: 3523118949493453815, guid: a716d3e323649c844956386b57a0b9a0,
     type: 3}
   equipSlot: 1

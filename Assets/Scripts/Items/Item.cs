@@ -12,11 +12,20 @@ namespace LateUpdate {
         #region Public Fields
         [Header("General infos")]
         public string itemName = null;
-        public Sprite icon = null;       
-        public bool isDefaultItem = false;
+        public Sprite icon = null;
 
         [Header("Relations")]
         public Pickable pickable;
+
+        //K zone => delete if not used
+        [Header("Inventory K")]
+        [Tooltip("The size of the item in Inventory Grid")]
+        public Vector2Int inventorySize = Vector2Int.one;
+        [Tooltip("The max amount of items for one stack, 1 == not stackable")]
+        public int stackLimit = 1;
+
+        [Header("Inventory")]
+        public float encumbrance = 0.1f;
         #endregion
 
         #region Public Methods
@@ -30,10 +39,11 @@ namespace LateUpdate {
 
             return inst;
         }
-        public virtual Inventory GetActiveInventory()
+
+        /*public virtual Inventory GetActiveInventory()
         {
             return InputManager.CurrentController.GetComponent<Inventory>();
-        }
+        }*/
 
         public virtual void Use()
         {
@@ -42,7 +52,7 @@ namespace LateUpdate {
 
         public virtual void RemoveFromInventory()
         {
-            GetActiveInventory().Remove(this);
+            //GetActiveInventory().Remove(this);
         }
         #endregion
 
@@ -52,6 +62,10 @@ namespace LateUpdate {
         {
             if (string.IsNullOrEmpty(itemName))
                 itemName = name;
+
+            if (inventorySize.x < 1) inventorySize.x = 1;
+            if (inventorySize.y < 1) inventorySize.y = 1;
+            if (stackLimit < 1) stackLimit = 1;
         }
 
         [ContextMenu("Update Icon")]

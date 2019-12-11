@@ -2,91 +2,182 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace LateUpdate {
     public class InventoryUI : MonoBehaviour
     {
+        public enum SortingOrder {none, AZ, encumbrance, amount }
+
         [Header("Relations")]
-        [SerializeField] Button inventoryButton;
-        [SerializeField] GameObject inventoryPanel;
-        [SerializeField] Transform slotsParent;
+        [SerializeField] Transform inventoryButtonsParent;
+        [SerializeField] Transform inventorySlotsParent;
+        [SerializeField] Slider fillBar;
+
+        [Header("Models")]
+        [SerializeField] InventoryButton inventoryButtonModel;
+        [SerializeField] InventorySlotUI inventorySlotModel;
+
+        SortingOrder sortingOrder;
 
         public Inventory Inventory { get; private set; }
-        public InventorySlot[] Slots { get; private set; }
+        public bool IsOpen { get; private set; } = true;
 
         public void SetInventory(Inventory inventory)
         {
-            if (Inventory != null)
-                Inventory.onInventoryChanged.RemoveListener(UpdateUI);
+            if(Inventory != null)
+            {
+                Inventory.onInventoryUpdate.RemoveListener(OnInventoryUpdate);
+            }
 
             Inventory = inventory;
 
-            if (Inventory != null)
+            if (Inventory == null)
             {
-                Inventory.onInventoryChanged.AddListener(UpdateUI);
-                inventoryButton.interactable = true;
-                UpdateUI();
+                Close();
+                gameObject.SetActive(false);
+                return;
             }
-            else
+
+            gameObject.SetActive(true);
+
+            RefreshInventoryButtons();
+            RefreshFillBar();
+            if (IsOpen)
             {
-                inventoryButton.interactable = false;
-                CloseInventory();
-            }           
+                RefreshInventorySlots();
+            }
+
+            inventory.onInventoryUpdate.AddListener(OnInventoryUpdate);
         }
 
-        void UpdateUI()
+        public void ChangeSortingOrder(SortingOrder order)
         {
-            Slots = slotsParent.GetComponentsInChildren<InventorySlot>();
-            for (int i = 0; i < Slots.Length; i++)
+            sortingOrder = order;
+            RefreshInventorySlots();
+        }
+
+        public void ChangeSortingOrder(int order)
+        {
+            ChangeSortingOrder((SortingOrder)order);
+        }
+
+        void RefreshInventoryButtons()
+        {
+            InventoryButton[] buttons = inventoryButtonsParent.GetComponentsInChildren<InventoryButton>();
+            int nbcontainers = Inventory.Containers.Count + 1;
+
+            for (int i = 0; i < nbcontainers || i < buttons.Length ; i++)
             {
-                if(Inventory != null &&  i < Inventory.Items.Count)
+                ContainerData containerData = i == 0 ? null : Inventory.Containers[i - 1];
+
+                if(i < nbcontainers)
                 {
-                    Slots[i].SetItem(Inventory.Items[i]);
+                    if (i < buttons.Length)
+                    {
+                        buttons[i].Configure(Inventory, containerData);
+                    }
+                    else
+                    {
+                        InventoryButton button = Instantiate(inventoryButtonModel, inventoryButtonsParent);
+                        button.Configure(Inventory, containerData);
+                    }
                 }
                 else
                 {
-                    Slots[i].ClearSlot();
+                    Destroy(buttons[i].gameObject);
                 }
             }
         }
 
-        public void OpenInventory()
+        void RefreshInventorySlots()
         {
-            if (Inventory == null) return;
+            InventorySlotUI[] slots = inventorySlotsParent.GetComponentsInChildren<InventorySlotUI>();
+            List<ItemData> content = ApplySorting(Inventory.ActiveDataSet).ToList();
 
-            inventoryPanel.SetActive(true);
-            UpdateUI();
+            Debug.Log(content.Count);
+
+            for (int i = 0; i < content.Count || i < slots.Length; i++)
+            {
+                if (i < content.Count)
+                {
+                    if (i < slots.Length)
+                    {
+                        slots[i].Configure(Inventory, content[i]);
+                    }
+                    else
+                    {
+                        InventorySlotUI slot = Instantiate(inventorySlotModel, inventorySlotsParent);
+                        slot.Configure(Inventory, content[i]);
+                    }
+                }
+                else
+                {
+                    Destroy(slots[i].gameObject);
+                }
+            }
         }
 
-        public void CloseInventory()
+        void RefreshFillBar()
         {
-            inventoryPanel.SetActive(false);
-        }
-
-        public void SwitchInventory()
-        {
-            if (inventoryPanel.activeSelf)
-                CloseInventory();
-            else
-                OpenInventory();
+            fillBar.value = Inventory.GetFillPercent();
         }
 
         void OnCurrentControllerChanged(Controller controller)
         {
-            SetInventory(controller == null? null : controller.GetComponent<Inventory>());
+            SetInventory(controller == null ? null : controller.GetComponent<Inventory>());
         }
 
-        private void Update()
+        void OnInventoryUpdate()
         {
-            if (Input.GetButtonDown("Inventory"))
+            InventoryButton[] buttons = inventoryButtonsParent.GetComponentsInChildren<InventoryButton>();
+            for (int i = 0; i < buttons.Length; i++)
             {
-                SwitchInventory();
+                buttons[i].UpdateFillBar();
+            }
+            RefreshFillBar();
+
+            if (IsOpen)
+            {
+                RefreshInventorySlots();
             }
         }
 
+        public void Close()
+        {
+            IsOpen = false;
+        }
+
+        public void Open()
+        {
+            IsOpen = true;
+            RefreshInventorySlots();
+        }
+
+        public void Switch()
+        {
+            if (IsOpen) Close();
+            else Open();
+        }
+
+        IEnumerable<ItemData> ApplySorting(IEnumerable<ItemData> datas)
+        {
+            switch (sortingOrder)
+            {
+                case SortingOrder.none:
+                    return datas;
+                case SortingOrder.AZ:
+                    return datas.OrderBy(d => d.Item.itemName);
+                case SortingOrder.encumbrance:
+                    return datas.OrderBy(d => d.Encumbrance);
+                case SortingOrder.amount:
+                    return datas.OrderBy(d => d.Amount);
+            }
+            return datas;
+        }
+
         private void Start()
-        {            
-            inventoryButton.onClick.AddListener(SwitchInventory);
+        {
             OnCurrentControllerChanged(InputManager.CurrentController);
             InputManager.Active.onCurrentControllerChanged.AddListener(OnCurrentControllerChanged);
         }

@@ -41,7 +41,7 @@ namespace LateUpdate {
             if (inventory.Add(item))
             {          
                 Destroy(gameObject);
-            } 
+            }
         }
         #endregion
 

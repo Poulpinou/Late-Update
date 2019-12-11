@@ -21,9 +21,9 @@ namespace LateUpdate {
         #region Public Methods
         public override void Use()
         {
-            Equipment equipment = InputManager.CurrentController.GetComponent<Equipment>();
-            equipment.Equip(this);
-            RemoveFromInventory();
+            //Equipment equipment = InputManager.CurrentController.GetComponent<Equipment>();
+            //equipment.Equip(this);
+            //RemoveFromInventory();
         }
         #endregion
 

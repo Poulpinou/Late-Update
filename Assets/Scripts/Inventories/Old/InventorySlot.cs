@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace LateUpdate {
+namespace LateUpdate.Old {
     public class InventorySlot : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler
     {
         #region Serialized Fields

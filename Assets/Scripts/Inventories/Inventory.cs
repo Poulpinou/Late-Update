@@ -2,55 +2,107 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using System;
+using System.Linq;
 
 namespace LateUpdate {
     public class Inventory : MonoBehaviour
     {
-        #region Serialized Fields
-        [SerializeField] List<Item> items = new List<Item>();
-        [SerializeField] int space = 20;
-        #endregion
+        [SerializeField] float capacity;
+        [SerializeField] List<ItemData> itemDatas = new List<ItemData>();
+        [SerializeField] List<ContainerData> containers = new List<ContainerData>();
 
-        #region Events
-        [Serializable] public class InventoryEvent : UnityEvent { }
+        public class InventoryUpdateEvent : UnityEvent { }
+        public InventoryUpdateEvent onInventoryUpdate = new InventoryUpdateEvent();
 
-        public InventoryEvent onInventoryChanged = new InventoryEvent();
-        #endregion
+        public ContainerData ActiveContainer { get; private set; } = null;
+        public float Encumbrance => itemDatas.Sum(i => i.Encumbrance);
+        public float Capacity => capacity;
+        public List<ContainerData> Containers => containers;
+        public List<ItemData> ActiveDataSet => ActiveContainer == null ? itemDatas : ActiveContainer.content;
 
-        #region Public Properties
-        public List<Item> Items => items;
-        public int Space => space;
-        #endregion
-
-        #region Public Methods
-        public bool Add(Item item)
+        public void Transfer(ContainerData container1, ContainerData container2, Item item, int amount)
         {
-            if (!item.isDefaultItem)
-            {
-                if(items.Count >= space)
-                {
-                    Debug.Log("Not enough space");
-                }
-                items.Add(item);
 
-                onInventoryChanged.Invoke();
+        }
+
+        public void SwitchActiveContainer(ContainerData containerData)
+        {
+            if (containerData == null || containers.Contains(containerData))
+            {
+                ActiveContainer = containerData;
+                UpdateInventory();
+            }
+        }
+
+        public bool Add(Item item, int amount = 1)
+        {
+            if(CanAdd(item, amount))
+            {
+                ItemData data = ActiveDataSet.Where(i => i.Item == item).FirstOrDefault();
+                if (data != null)
+                    data.Amount += amount;
+                else
+                    ActiveDataSet.Add(new ItemData(item, amount));
+                UpdateInventory();
                 return true;
             }
-            return false;
+            else
+            {
+                Message.Send(string.Format(
+                    "Impossible to add {0} {1} to {2}, not enough capacity",
+                    amount,
+                    item.itemName,
+                    ActiveContainer == null? name : ActiveContainer.Container.itemName
+                ));
+                return false;
+            }
         }
 
-        public void Remove(Item item)
+        public void Remove(Item item, int amount = 1)
         {
-            items.Remove(item);
-            onInventoryChanged.Invoke();
+            ItemData data = ActiveDataSet.Where(i => i.Item == item).FirstOrDefault();
+            if (data == null)
+                Message.Send(string.Format(
+                    "No {0} found in {1}",
+                    item.itemName,
+                    ActiveContainer == null ? name : ActiveContainer.Container.itemName
+                ));
+            else
+            {
+                data.Amount -= amount;
+                if(data.Amount <= 0)
+                {
+                    ActiveDataSet.Remove(data);
+                }
+                UpdateInventory();
+            }
         }
 
-        public void Drop(Item item)
+        public bool CanAdd(Item item, int amount = 1)
         {
-            item.Spawn(transform.position);
-            Remove(item);
+            if(ActiveContainer == null)
+            {
+                return Encumbrance + item.encumbrance * amount < capacity;
+            }
+            else
+            {
+                return ActiveContainer.Encumbrance + item.encumbrance * amount < ActiveContainer.Container.capacity;
+            }
         }
-        #endregion
+
+        public float GetFillPercent()
+        {
+            return (Encumbrance + containers.Sum(c => c.Encumbrance)) / (capacity + containers.Sum(c => c.Container.capacity));
+        }
+
+        public void UpdateInventory()
+        {
+            onInventoryUpdate.Invoke();
+        }
+
+        private void Awake()
+        {
+            UpdateInventory();
+        }
     }
 }

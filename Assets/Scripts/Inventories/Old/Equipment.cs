@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System;
 
-namespace LateUpdate {
+namespace LateUpdate.Old {
     [RequireComponent(typeof(Inventory))]
     public class Equipment : MonoBehaviour
     {
