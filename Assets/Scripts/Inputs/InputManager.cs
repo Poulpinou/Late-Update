@@ -14,11 +14,15 @@ namespace LateUpdate {
         [SerializeField] LayerMask raycastFilter;
 
         [Header("Controllers")]
-        [SerializeField] Controller defaultController = null; 
+        [SerializeField] Controller defaultController = null;
+
+        [Header("Click")]
+        [SerializeField] float holdSensibility = 0.5f;
         #endregion
 
         #region Private Fields
         Controller currentController = null;
+        float holdTime = 0;
         #endregion
 
         #region Events
@@ -28,7 +32,11 @@ namespace LateUpdate {
         [Header("Events")]
         public CharacterEvent onCurrentControllerChanged = new CharacterEvent();
         public RaycastEvent onRightClick = new RaycastEvent();
+        public RaycastEvent onRightClickHold = new RaycastEvent();
+        public RaycastEvent onRightClickRelease = new RaycastEvent();
         public RaycastEvent onLeftClick = new RaycastEvent();
+        public RaycastEvent onLeftClickHold = new RaycastEvent();
+        public RaycastEvent onLeftClickRelease = new RaycastEvent();
         #endregion
 
         #region Static Properties
@@ -61,7 +69,11 @@ namespace LateUpdate {
                 return;
 
             if (Input.GetMouseButtonDown(0)) LeftClick();
+            else if (Input.GetMouseButton(0)) LeftClickHold();
+            else if (Input.GetMouseButtonUp(0)) LeftClickRelease();
             else if (Input.GetMouseButtonDown(1)) RightClick();
+            else if (Input.GetMouseButton(1)) RightClickHold();
+            else if (Input.GetMouseButtonUp(1)) RightClickRelease();
             else if (Input.anyKey) KeyBoard();
         }
 
@@ -90,18 +102,47 @@ namespace LateUpdate {
         {
             if (currentController == null) return;
 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, raycastDepth, raycastFilter))
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, raycastDepth, raycastFilter))
             {
                 onRightClick.Invoke(hit);
             }
         }
 
+        void LeftClickHold() {
+            if (!CheckHold()) return;
+        }
+
+        void RightClickHold() {
+            if (!CheckHold()) return;
+
+            RaycastHit hit;
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, raycastDepth, raycastFilter))
+            {
+                onRightClickHold.Invoke(hit);
+            }
+        }
+
+        void LeftClickRelease()
+        {
+            holdTime = 0;
+        }
+
+        void RightClickRelease()
+        {
+            holdTime = 0;
+        }
+
         void KeyBoard()
         {
 
+        }
+
+        bool CheckHold()
+        {
+            if (holdTime > holdSensibility) return true;
+            holdTime += Time.deltaTime;
+            return false;
         }
         #endregion
 

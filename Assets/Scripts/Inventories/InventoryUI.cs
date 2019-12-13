@@ -95,8 +95,6 @@ namespace LateUpdate {
             InventorySlotUI[] slots = inventorySlotsParent.GetComponentsInChildren<InventorySlotUI>();
             List<ItemData> content = ApplySorting(Inventory.ActiveDataSet).ToList();
 
-            Debug.Log(content.Count);
-
             for (int i = 0; i < content.Count || i < slots.Length; i++)
             {
                 if (i < content.Count)

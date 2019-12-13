@@ -19,6 +19,20 @@ namespace LateUpdate {
         public Item Item => item;
         #endregion
 
+        #region Public Methods
+        public override List<GameAction> GetPossibleActions(Controller controller)
+        {
+            List<GameAction> interactions = new List<GameAction>();
+
+            Inventory inventory = controller.GetComponent<Inventory>();
+            if (inventory != null && controller.CanMove)
+                interactions.Add(new PickUp(controller, this, inventory));
+
+            return interactions;
+
+        }
+        #endregion
+
         #region Private Methods
         internal void SetItem(Item item)
         {
@@ -26,21 +40,29 @@ namespace LateUpdate {
             name = "Pickable_" + item.itemName;
             item.pickable = this;
         }
+        #endregion
 
-        protected override void Interact()
+        #region Interactions
+        public class PickUp : GameAction
         {
-            PickUp();
-        }
+            readonly Inventory _inventory;
+            readonly Pickable _pickable;
 
-        protected virtual void PickUp()
-        {
-            Inventory inventory = actor.GetComponent<Inventory>();
-            if (inventory == null)
-                throw new Exception(string.Format("{0} can't pickup {1} because it has no Inventory attached to it!", actor.name, item.itemName));
+            public override string Name => "Pick up";
+            public override bool NeedsContact => true;
 
-            if (inventory.Add(item))
-            {          
-                Destroy(gameObject);
+            public PickUp(Controller actor, Pickable pickable, Inventory inventory) : base(actor, pickable)
+            {
+                _inventory = inventory;
+                _pickable = pickable;
+            }
+
+            public override void Execute()
+            {
+                if (_inventory.Add(_pickable.Item))
+                {
+                    Destroy(_pickable.gameObject);
+                }
             }
         }
         #endregion
