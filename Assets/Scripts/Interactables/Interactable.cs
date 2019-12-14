@@ -15,7 +15,13 @@ namespace LateUpdate {
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// The <see cref="Transform"/> of the interaction area
+        /// </summary>
         public virtual Transform InteractionTransform => interactionTransform;
+        /// <summary>
+        /// The radius of the interaction area
+        /// </summary>
         public virtual float InteractionRadius => interactionRadius;
         #endregion
 

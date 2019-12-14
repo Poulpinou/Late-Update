@@ -1,16 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace LateUpdate {
     /// <summary>
-    /// Temp version of messaging system
+    /// This class is a data container for <see cref="MessageManager"/>
     /// </summary>
     public class Message
     {
-        public static void Send(string message)
+        public string Content { get; private set; }
+        public string StackTrace { get; private set; }
+        public LogType LogType { get; private set; }
+        public DateTime Time { get; private set; }
+
+        public Message(string content, LogType logType = LogType.Log)
         {
-            Debug.Log(message);
+            Content = content;
+            LogType = logType;
+            Time = DateTime.Now;
+        }
+
+        public Message(string content, string stackTrace, LogType logType = LogType.Log) : this(content, logType)
+        {
+            StackTrace = stackTrace;
         }
     }
 }

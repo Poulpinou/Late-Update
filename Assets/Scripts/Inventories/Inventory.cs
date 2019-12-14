@@ -48,12 +48,12 @@ namespace LateUpdate {
             }
             else
             {
-                Message.Send(string.Format(
+                MessageManager.Send(string.Format(
                     "Impossible to add {0} {1} to {2}, not enough capacity",
                     amount,
                     item.itemName,
                     ActiveContainer == null? name : ActiveContainer.Container.itemName
-                ));
+                ), LogType.Warning);
                 return false;
             }
         }
@@ -62,11 +62,11 @@ namespace LateUpdate {
         {
             ItemData data = ActiveDataSet.Where(i => i.Item == item).FirstOrDefault();
             if (data == null)
-                Message.Send(string.Format(
+                MessageManager.Send(string.Format(
                     "No {0} found in {1}",
                     item.itemName,
                     ActiveContainer == null ? name : ActiveContainer.Container.itemName
-                ));
+                ), LogType.Error);
             else
             {
                 data.Amount -= amount;

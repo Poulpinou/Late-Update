@@ -7,10 +7,13 @@ using UnityEngine.EventSystems;
 namespace LateUpdate {
     public class ActionPopup : MonoBehaviour, IPointerClickHandler
     {
+        #region Serialized Fields
         [SerializeField] Transform popup;
         [SerializeField] Transform actionButtonsParent;
         [SerializeField] Button actionButtonModel;
+        #endregion
 
+        #region Public Methods
         public void Configure(List<GameAction> actions, Vector2 position)
         {
             popup.position = position;
@@ -27,11 +30,14 @@ namespace LateUpdate {
         {
             Destroy(gameObject);
         }
+        #endregion
 
+        #region Private Methods
         void OnActionClick(GameAction action)
         {
             action.Run();
             Destroy(gameObject);
         }
+        #endregion
     }
 }

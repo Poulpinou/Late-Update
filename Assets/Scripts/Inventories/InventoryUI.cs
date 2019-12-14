@@ -10,6 +10,7 @@ namespace LateUpdate {
         public enum SortingOrder {none, AZ, encumbrance, amount }
 
         [Header("Relations")]
+        [SerializeField] TranslationSwitcher switchablePanel; 
         [SerializeField] Transform inventoryButtonsParent;
         [SerializeField] Transform inventorySlotsParent;
         [SerializeField] Slider fillBar;
@@ -21,7 +22,6 @@ namespace LateUpdate {
         SortingOrder sortingOrder;
 
         public Inventory Inventory { get; private set; }
-        public bool IsOpen { get; private set; } = true;
 
         public void SetInventory(Inventory inventory)
         {
@@ -34,7 +34,6 @@ namespace LateUpdate {
 
             if (Inventory == null)
             {
-                Close();
                 gameObject.SetActive(false);
                 return;
             }
@@ -43,7 +42,7 @@ namespace LateUpdate {
 
             RefreshInventoryButtons();
             RefreshFillBar();
-            if (IsOpen)
+            if (switchablePanel.IsOpen)
             {
                 RefreshInventorySlots();
             }
@@ -135,27 +134,10 @@ namespace LateUpdate {
             }
             RefreshFillBar();
 
-            if (IsOpen)
+            if (switchablePanel.IsOpen)
             {
                 RefreshInventorySlots();
             }
-        }
-
-        public void Close()
-        {
-            IsOpen = false;
-        }
-
-        public void Open()
-        {
-            IsOpen = true;
-            RefreshInventorySlots();
-        }
-
-        public void Switch()
-        {
-            if (IsOpen) Close();
-            else Open();
         }
 
         IEnumerable<ItemData> ApplySorting(IEnumerable<ItemData> datas)
@@ -178,6 +160,12 @@ namespace LateUpdate {
         {
             OnCurrentControllerChanged(InputManager.CurrentController);
             InputManager.Active.onCurrentControllerChanged.AddListener(OnCurrentControllerChanged);
+        }
+
+        private void Update()
+        {
+            if (Input.GetButtonDown("Inventory"))
+                switchablePanel.Switch();
         }
     }
 }

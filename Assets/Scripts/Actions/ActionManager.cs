@@ -4,11 +4,23 @@ using UnityEngine;
 using System.Linq;
 
 namespace LateUpdate {
+    /// <summary>
+    /// This Manager helps you to configure actions and call them staticaly
+    /// </summary>
     public class ActionManager : StaticManager<ActionManager>
     {
+        #region Serialized Fields
         [Header("Relations")]
         [SerializeField] ActionPopup popupModel;
+        #endregion
 
+        #region Static Methods
+        /// <summary>
+        /// This method extracts every possible <see cref="GameAction"/> from the actor and the target
+        /// </summary>
+        /// <param name="actor">The <see cref="Controller"/> that will perform the action</param>
+        /// <param name="target">The <see cref="IInteractable"/> that will be the target of the action</param>
+        /// <returns>A List of <see cref="GameAction"/></returns>
         public static List<GameAction> ExtractActions(Controller actor, IInteractable target)
         {
             List<GameAction> actions = new List<GameAction>();
@@ -28,6 +40,13 @@ namespace LateUpdate {
             return actions;
         }
 
+        /// <summary>
+        /// Opens an <see cref="ActionPopup"/> at <paramref name="screenPosition"/> filled with extracted actions from <paramref name="actor"/> and <paramref name="target"/>
+        /// </summary>
+        /// <param name="actor">The <see cref="Controller"/> that will perform the action</param>
+        /// <param name="target">The <see cref="IInteractable"/> that will be the target of the action</param>
+        /// <param name="screenPosition">The position on the screen (= mouse position by default)</param>
+        /// <returns>The instantiated action popup</returns>
         public static ActionPopup OpenActionPopup(Controller actor, IInteractable target, Vector2? screenPosition = null)
         {
             List<GameAction> actions = ExtractActions(actor, target);
@@ -40,5 +59,6 @@ namespace LateUpdate {
 
             return popup;
         }
+        #endregion
     }
 }
