@@ -4,9 +4,13 @@ using UnityEngine;
 
 namespace LateUpdate
 {
-    [RequireComponent(typeof(Motor))]
+    [RequireComponent(typeof(Character))]
     public class Controller_Character : Controller
     {
+        #region Public Properties
+        public Character Character { get; protected set; }
+        #endregion
+
         #region Private Methods
         protected override void AddListeners()
         {
@@ -25,17 +29,24 @@ namespace LateUpdate
             IInteractable interactable = hit.collider.GetComponent<IInteractable>();
             if (interactable != null)
             {
-                ActionManager.OpenActionPopup(this, interactable);
+                ActionManager.OpenActionPopup(Character, interactable);
             }
             else
             {
-                Motor.GoTo(hit.point);
+                Character.Motor.GoTo(hit.point);
             }
         }
 
         void OnRightClickHold(RaycastHit hit)
         {
-            Motor.MoveToPoint(hit.point);
+            Character.Motor.MoveToPoint(hit.point);
+        }
+        #endregion
+
+        #region Runtime Methods
+        protected virtual void Awake()
+        {
+            Character = GetComponent<Character>();
         }
         #endregion
     }

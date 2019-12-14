@@ -85,9 +85,10 @@ namespace LateUpdate {
             if (Physics.Raycast(ray, out hit, raycastDepth, raycastFilter))
             {
                 Controller controller = hit.collider.GetComponent<Controller>();
-                if (controller != null && controller.ControlledByPlayer && controller != currentController)
+                if (controller != null)
                 {
-                    SetCurrentController(controller);
+                    if(controller.ControlledByPlayer && controller != currentController)
+                        SetCurrentController(controller);
                 }
                 else
                 {

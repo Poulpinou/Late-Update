@@ -42,10 +42,7 @@ namespace LateUpdate {
 
             RefreshInventoryButtons();
             RefreshFillBar();
-            if (switchablePanel.IsOpen)
-            {
-                RefreshInventorySlots();
-            }
+            RefreshInventorySlots();
 
             inventory.onInventoryUpdate.AddListener(OnInventoryUpdate);
         }
@@ -68,10 +65,9 @@ namespace LateUpdate {
 
             for (int i = 0; i < nbcontainers || i < buttons.Length ; i++)
             {
-                ContainerData containerData = i == 0 ? null : Inventory.Containers[i - 1];
-
                 if(i < nbcontainers)
                 {
+                    ContainerData containerData = i == 0 ? null : Inventory.Containers[i - 1];
                     if (i < buttons.Length)
                     {
                         buttons[i].Configure(Inventory, containerData);
@@ -133,11 +129,7 @@ namespace LateUpdate {
                 buttons[i].UpdateFillBar();
             }
             RefreshFillBar();
-
-            if (switchablePanel.IsOpen)
-            {
-                RefreshInventorySlots();
-            }
+            RefreshInventorySlots();
         }
 
         IEnumerable<ItemData> ApplySorting(IEnumerable<ItemData> datas)

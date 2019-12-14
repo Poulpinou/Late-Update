@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7287e0ea80da95d4cb741b812b952a8a, type: 3}
   m_Name: TestContainer
   m_EditorClassIdentifier: 
-  itemName: 
-  icon: {fileID: 0}
+  itemName: TestContainer
+  icon: {fileID: 21300000, guid: fa5cf1a481b00194ba2d0036ae48c0ff, type: 3}
   pickable: {fileID: 0}
   inventorySize: {x: 1, y: 1}
   stackLimit: 1

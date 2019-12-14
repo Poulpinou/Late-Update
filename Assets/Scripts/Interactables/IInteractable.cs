@@ -12,6 +12,6 @@ namespace LateUpdate {
         float InteractionRadius { get; }
         GameObject gameObject { get; }
 
-        List<GameAction> GetPossibleActions(Controller controller);
+        List<GameAction> GetPossibleActions(Actor actor);
     }
 }

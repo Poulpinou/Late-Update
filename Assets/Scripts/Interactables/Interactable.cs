@@ -26,7 +26,7 @@ namespace LateUpdate {
         #endregion
 
         #region Public Methods
-        public abstract List<GameAction> GetPossibleActions(Controller controller);
+        public abstract List<GameAction> GetPossibleActions(Actor actor);
         #endregion
 
         #region Runtime Methods

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace LateUpdate {
-    public class Character : MonoBehaviour, IInteractable
+    public class Character : Actor, IInteractable
     {
         public Transform InteractionTransform => transform;
 
         public float InteractionRadius => 0.1f;
 
-        public virtual List<GameAction> GetPossibleActions(Controller actor)
+        public virtual List<GameAction> GetPossibleActions(Actor actor)
         {
             List<GameAction> actions = new List<GameAction>();
 
@@ -26,7 +26,7 @@ namespace LateUpdate {
 
             public override bool NeedsContact => false;
 
-            public Follow(Controller actor, IInteractable interactable) : base(actor, interactable) { }
+            public Follow(Actor actor, IInteractable interactable) : base(actor, interactable) { }
 
             public override void Execute()
             {

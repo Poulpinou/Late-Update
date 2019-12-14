@@ -697,7 +697,6 @@ MonoBehaviour:
   dontDestroyOnLoad: 0
   ui: {fileID: 268794319}
   catchExceptions: 1
-  displayStackTrace: 0
 --- !u!1001 &847079217
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2044,7 +2043,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   capacity: 10
   itemDatas: []
-  containers: []
+  containers:
+  - item: {fileID: 11400000, guid: d5d90c7fecc964f4e807f7a3e1504904, type: 2}
+    amount: 0
+    content:
+    - item: {fileID: 11400000, guid: b80e9e5d5e27fb1449d2f592df7e2459, type: 2}
+      amount: 1
+    - item: {fileID: 11400000, guid: 48a8c07c495b9ed45a726de402c31e1e, type: 2}
+      amount: 1
 --- !u!114 &3344151864833139568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2173,46 +2179,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3624374847488739751, guid: d982c970a478cab4282584b6df548fe9,
-        type: 3}
-      propertyPath: messageColor.r
-      value: 0.9339623
-      objectReference: {fileID: 0}
-    - target: {fileID: 3624374847488739751, guid: d982c970a478cab4282584b6df548fe9,
-        type: 3}
-      propertyPath: messageColor.g
-      value: 0.9339623
-      objectReference: {fileID: 0}
-    - target: {fileID: 3624374847488739751, guid: d982c970a478cab4282584b6df548fe9,
-        type: 3}
-      propertyPath: messageColor.b
-      value: 0.9339623
-      objectReference: {fileID: 0}
-    - target: {fileID: 3624374847488739751, guid: d982c970a478cab4282584b6df548fe9,
-        type: 3}
-      propertyPath: messageColor.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3624374847488739751, guid: d982c970a478cab4282584b6df548fe9,
-        type: 3}
-      propertyPath: errorColor.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3624374847488739751, guid: d982c970a478cab4282584b6df548fe9,
-        type: 3}
-      propertyPath: errorColor.g
-      value: 0.504717
-      objectReference: {fileID: 0}
-    - target: {fileID: 3624374847488739751, guid: d982c970a478cab4282584b6df548fe9,
-        type: 3}
-      propertyPath: errorColor.b
-      value: 0.504717
-      objectReference: {fileID: 0}
-    - target: {fileID: 3624374847488739751, guid: d982c970a478cab4282584b6df548fe9,
-        type: 3}
-      propertyPath: errorColor.a
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 123330847563553092, guid: d982c970a478cab4282584b6df548fe9,
         type: 3}
@@ -2525,6 +2491,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7706810708074309306, guid: a02523416a31e3541baba1390a0e5f34,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 55
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a02523416a31e3541baba1390a0e5f34, type: 3}

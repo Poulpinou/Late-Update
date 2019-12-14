@@ -11,9 +11,9 @@ namespace LateUpdate {
     {
         #region Public Properties
         /// <summary>
-        /// The <see cref="Controller"/> that will perform the action
+        /// The <see cref="Actor"/> that will perform the action
         /// </summary>
-        public Controller Actor { get; protected set; }
+        public Actor Actor { get; protected set; }
         /// <summary>
         /// The <see cref="IInteractable"/> that will be the target of the action
         /// </summary>
@@ -32,9 +32,9 @@ namespace LateUpdate {
         /// <summary>
         /// Overide this constructor to add other paramas to your custom <see cref="GameAction"/>
         /// </summary>
-        /// <param name="actor">The <see cref="Controller"/> that will perform the action</param>
+        /// <param name="actor">The <see cref="Actor"/> that will perform the action</param>
         /// <param name="target">The <see cref="IInteractable"/> that will be the target of the action</param>
-        public GameAction(Controller actor, IInteractable target)
+        public GameAction(Actor actor, IInteractable target)
         {
             Actor = actor;
             Target = target;

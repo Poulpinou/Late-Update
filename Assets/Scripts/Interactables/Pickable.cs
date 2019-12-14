@@ -20,13 +20,13 @@ namespace LateUpdate {
         #endregion
 
         #region Public Methods
-        public override List<GameAction> GetPossibleActions(Controller controller)
+        public override List<GameAction> GetPossibleActions(Actor actor)
         {
             List<GameAction> interactions = new List<GameAction>();
 
-            Inventory inventory = controller.GetComponent<Inventory>();
-            if (inventory != null && controller.CanMove)
-                interactions.Add(new PickUp(controller, this, inventory));
+            Inventory inventory = actor.GetComponent<Inventory>();
+            if (inventory != null && actor.CanMove)
+                interactions.Add(new PickUp(actor, this, inventory));
 
             return interactions;
 
@@ -51,7 +51,7 @@ namespace LateUpdate {
             public override string Name => "Pick up";
             public override bool NeedsContact => true;
 
-            public PickUp(Controller actor, Pickable pickable, Inventory inventory) : base(actor, pickable)
+            public PickUp(Actor actor, Pickable pickable, Inventory inventory) : base(actor, pickable)
             {
                 _inventory = inventory;
                 _pickable = pickable;
