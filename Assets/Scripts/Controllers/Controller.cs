@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace LateUpdate {
+    /// <summary>
+    /// This class makes the link beetween an object and the <see cref="InputManager"/> and player actions
+    /// </summary>
     public abstract class Controller : MonoBehaviour
     {
         #region Serialized Fields

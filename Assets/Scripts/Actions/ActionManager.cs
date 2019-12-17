@@ -12,6 +12,9 @@ namespace LateUpdate {
         #region Serialized Fields
         [Header("Relations")]
         [SerializeField] ActionPopup popupModel;
+
+        [Header("Settings")]
+        [SerializeField] bool autoPerformIfSingleAction = false;
         #endregion
 
         #region Static Methods
@@ -51,6 +54,11 @@ namespace LateUpdate {
         {
             List<GameAction> actions = ExtractActions(actor, target);
             if (actions.Count == 0) return null;
+            if(Active.autoPerformIfSingleAction && actions.Count == 1)
+            {
+                actions[0].Run();
+                return null;
+            }
 
             Vector2 pos = screenPosition.HasValue ? screenPosition.Value : (Vector2)Input.mousePosition;
 

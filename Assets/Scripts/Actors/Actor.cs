@@ -1,10 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace LateUpdate {
     public class Actor : MonoBehaviour
     {
+        #region Serialized Fields
+        [Header("Identity")]
+        [SerializeField] ActorInfos infos;
+        [SerializeField] Camera faceCamera;
+        #endregion
+
+        #region Public Properties
+        public ActorInfos Infos => infos;
+        public Camera FaceCamera => faceCamera;
         /// <summary>
         /// Reference to <see cref="Motor"/> if it has one
         /// </summary>
@@ -17,6 +27,7 @@ namespace LateUpdate {
         /// The <see cref="GameAction"/> currently performed by this <see cref="Actor"/>
         /// </summary>
         public GameAction CurrentAction { get; protected set; }
+        #endregion
 
         #region Public Methods
         /// <summary>
@@ -55,6 +66,18 @@ namespace LateUpdate {
         protected virtual void Awake()
         {
             Motor = GetComponent<Motor>();
+        }
+        #endregion
+
+        #region Internal Classes
+        [Serializable]
+        public struct ActorInfos
+        {
+            public string name;
+            [TextArea]
+            public string description;
+            [TextArea]
+            public string[] routineSentences;
         }
         #endregion
     }
