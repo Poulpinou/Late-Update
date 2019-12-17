@@ -9,50 +9,32 @@ namespace LateUpdate {
     {
         [SerializeField] float capacity;
         [SerializeField] List<ItemData> itemDatas = new List<ItemData>();
-        [SerializeField] List<ContainerData> containers = new List<ContainerData>();
 
         public class InventoryUpdateEvent : UnityEvent { }
         public InventoryUpdateEvent onInventoryUpdate = new InventoryUpdateEvent();
 
-        public ContainerData ActiveContainer { get; private set; } = null;
         public float Encumbrance => itemDatas.Sum(i => i.Encumbrance);
         public float Capacity => capacity;
-        public List<ContainerData> Containers => containers;
-        public List<ItemData> ActiveDataSet => ActiveContainer == null ? itemDatas : ActiveContainer.content;
-
-        public void Transfer(ContainerData container1, ContainerData container2, Item item, int amount)
-        {
-
-        }
-
-        public void SwitchActiveContainer(ContainerData containerData)
-        {
-            if (containerData == null || containers.Contains(containerData))
-            {
-                ActiveContainer = containerData;
-                UpdateInventory();
-            }
-        }
+        public List<ItemData> ItemDatas => itemDatas;
 
         public bool Add(Item item, int amount = 1)
         {
             if(CanAdd(item, amount))
             {
-                ItemData data = ActiveDataSet.Where(i => i.Item == item).FirstOrDefault();
+                ItemData data = itemDatas.Where(i => i.Item == item).FirstOrDefault();
                 if (data != null)
                     data.Amount += amount;
                 else
-                    ActiveDataSet.Add(new ItemData(item, amount));
+                    itemDatas.Add(new ItemData(item, amount));
                 UpdateInventory();
                 return true;
             }
             else
             {
                 MessageManager.Send(string.Format(
-                    "Impossible to add {0} {1} to {2}, not enough capacity",
+                    "Impossible to add {0} {1} to inventory, not enough capacity",
                     amount,
-                    item.itemName,
-                    ActiveContainer == null? name : ActiveContainer.Container.itemName
+                    item.itemName
                 ), LogType.Warning);
                 return false;
             }
@@ -60,19 +42,18 @@ namespace LateUpdate {
 
         public void Remove(Item item, int amount = 1)
         {
-            ItemData data = ActiveDataSet.Where(i => i.Item == item).FirstOrDefault();
+            ItemData data = itemDatas.Where(i => i.Item == item).FirstOrDefault();
             if (data == null)
                 MessageManager.Send(string.Format(
-                    "No {0} found in {1}",
-                    item.itemName,
-                    ActiveContainer == null ? name : ActiveContainer.Container.itemName
+                    "No {0} found in inventory",
+                    item.itemName
                 ), LogType.Error);
             else
             {
                 data.Amount -= amount;
                 if(data.Amount <= 0)
                 {
-                    ActiveDataSet.Remove(data);
+                    itemDatas.Remove(data);
                 }
                 UpdateInventory();
             }
@@ -80,19 +61,12 @@ namespace LateUpdate {
 
         public bool CanAdd(Item item, int amount = 1)
         {
-            if(ActiveContainer == null)
-            {
-                return Encumbrance + item.encumbrance * amount < capacity;
-            }
-            else
-            {
-                return ActiveContainer.Encumbrance + item.encumbrance * amount < ActiveContainer.Container.capacity;
-            }
+            return Encumbrance + item.encumbrance * amount < capacity;
         }
 
         public float GetFillPercent()
         {
-            return (Encumbrance + containers.Sum(c => c.Encumbrance)) / (capacity + containers.Sum(c => c.Container.capacity));
+            return Encumbrance / capacity;
         }
 
         public void UpdateInventory()

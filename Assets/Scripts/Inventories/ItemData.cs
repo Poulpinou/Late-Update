@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.Linq;
 
 namespace LateUpdate {
     [Serializable]
@@ -19,24 +18,6 @@ namespace LateUpdate {
         {
             this.item = item;
             this.amount = amount;
-        }
-    }
-
-    [Serializable]
-    public class ContainerData : ItemData
-    {
-        public List<ItemData> content;
-
-        public override int Amount => content.Count;
-        public override float Encumbrance => content.Sum(c => c.Encumbrance);
-        public Container Container => item as Container;
-
-        public ContainerData(Container container, List<ItemData> content = null) : base(container)
-        {
-            if (content != null)
-                this.content = content;
-            else
-                this.content = new List<ItemData>();
         }
     }
 }

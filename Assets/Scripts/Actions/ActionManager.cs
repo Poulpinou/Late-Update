@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 namespace LateUpdate {
     /// <summary>
@@ -11,7 +12,8 @@ namespace LateUpdate {
     {
         #region Serialized Fields
         [Header("Relations")]
-        [SerializeField] ActionPopup popupModel;
+        [SerializeField] ActionPopup actionPopupModel;
+        [SerializeField] AmountPopup amountPopupModel;
 
         [Header("Settings")]
         [SerializeField] bool autoPerformIfSingleAction = false;
@@ -62,8 +64,19 @@ namespace LateUpdate {
 
             Vector2 pos = screenPosition.HasValue ? screenPosition.Value : (Vector2)Input.mousePosition;
 
-            ActionPopup popup = Instantiate(Active.popupModel, GameManager.UIRoot);
+            ActionPopup popup = Instantiate(Active.actionPopupModel, GameManager.UIRoot);
             popup.Configure(actions, pos);
+
+            return popup;
+        }
+
+        public static AmountPopup OpenAmountPopup(Action<int> action, int defaultAmount, int maxAmount = 100, int minAmount = 0, Vector2? screenPosition = null)
+        {
+            Vector2 pos = screenPosition.HasValue ? screenPosition.Value : (Vector2)Input.mousePosition;
+
+            AmountPopup popup = Instantiate(Active.amountPopupModel, GameManager.UIRoot);
+            popup.transform.position = pos;
+            popup.Configure(action, defaultAmount, maxAmount, minAmount);
 
             return popup;
         }
