@@ -29,7 +29,7 @@ namespace LateUpdate {
 
 #if UNITY_EDITOR
         #region Editor Methods
-        [ContextMenu("Generate Pickable")]
+        [ContextMenu("Make Standard Mesh")]
         void GeneratePickable()
         {
             SkinnedMeshRenderer skinnedMeshRenderer = Instantiate(skinnedMesh);
@@ -41,13 +41,6 @@ namespace LateUpdate {
             meshRenderer.sharedMaterials = skinnedMeshRenderer.sharedMaterials;
 
             DestroyImmediate(skinnedMeshRenderer);
-
-            Pickable pickable = go.AddComponent<Pickable>();
-            pickable.SetItem(this);
-
-            go.AddComponent<BoxCollider>();
-
-            Selection.activeObject = go;
         }
         #endregion
 #endif

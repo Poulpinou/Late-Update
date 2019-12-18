@@ -22,10 +22,18 @@ namespace LateUpdate {
             if(CanAdd(item, amount))
             {
                 ItemData data = itemDatas.Where(i => i.Item == item).FirstOrDefault();
-                if (data != null)
-                    data.Amount += amount;
+
+                if (data == null)
+                {
+                    data = item.CreateDefaultDatas();
+                    data.Amount = amount;
+                    itemDatas.Add(data);
+                }
                 else
-                    itemDatas.Add(new ItemData(item, amount));
+                {
+                    data.Amount += amount;
+                }
+
                 UpdateInventory();
                 return true;
             }
@@ -40,14 +48,21 @@ namespace LateUpdate {
             }
         }
 
-        public void Remove(Item item, int amount = 1)
+        public bool Add(ItemData itemData)
+        {
+            return Add(itemData.Item, itemData.Amount);
+        }
+
+        public bool Remove(Item item, int amount = 1)
         {
             ItemData data = itemDatas.Where(i => i.Item == item).FirstOrDefault();
-            if (data == null)
+            if (data == null) { 
                 MessageManager.Send(string.Format(
                     "No {0} found in inventory",
                     item.itemName
                 ), LogType.Error);
+                return false;
+            }
             else
             {
                 data.Amount -= amount;
@@ -56,7 +71,28 @@ namespace LateUpdate {
                     itemDatas.Remove(data);
                 }
                 UpdateInventory();
+                return true;
             }
+        }
+
+        public bool Remove(ItemData itemData)
+        {
+            return Remove(itemData.Item, itemData.Amount);
+        }
+
+        public void Drop(ItemData data)
+        {
+            if (Remove(data))
+            {
+                data.SpawnItem(transform.position);
+            }
+        }
+
+        public void Drop(Item item, int amount = 1)
+        {
+            ItemData data = item.CreateDefaultDatas();
+            data.Amount = amount;
+            Drop(data);
         }
 
         public bool CanAdd(Item item, int amount = 1)

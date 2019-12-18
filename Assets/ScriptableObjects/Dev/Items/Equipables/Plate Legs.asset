@@ -14,9 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Plate Legs
   icon: {fileID: 21300000, guid: 594ab1f098aa1e54c8856e8ee4a91c70, type: 3}
-  pickable: {fileID: 154048617445213869, guid: 47f911d1f35aae74f99a5428cf9f854e, type: 3}
-  inventorySize: {x: 1, y: 1}
-  stackLimit: 1
+  model: {fileID: 1778837740305781928, guid: 47f911d1f35aae74f99a5428cf9f854e, type: 3}
   encumbrance: 3
   skinnedMesh: {fileID: 7662775130273080757, guid: 39625ec77fb4ebb4591c7faffa1fe974,
     type: 3}

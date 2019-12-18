@@ -5,8 +5,7 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - icon: {fileID: 21300000, guid: 342787adde2fa624fa63a469e52a3ce4, type: 3}
-  - pickable: {fileID: 1627427345574249395, guid: 25879301b869e2048b941803cf45cc4c,
-      type: 3}
+  - model: {fileID: 1627427345574249388, guid: 25879301b869e2048b941803cf45cc4c, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

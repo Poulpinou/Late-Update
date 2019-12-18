@@ -125,7 +125,7 @@ namespace LateUpdate {
         /// <param name="amount">The amount to drop</param>
         void PerformDrop(int amount)
         {
-            Inventory.Remove(tempDatas.Item, amount);
+            Inventory.Drop(tempDatas.Item, amount);
             tempDatas = null;
         }
 

@@ -14,9 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Plate Body
   icon: {fileID: 21300000, guid: 01510fb741c61f444a408357164b8c5f, type: 3}
-  pickable: {fileID: 0}
-  inventorySize: {x: 1, y: 1}
-  stackLimit: 1
+  model: {fileID: 6323196081172371199, guid: 275951ec4bb757f4cb012e86de6c0607, type: 3}
   encumbrance: 3
   skinnedMesh: {fileID: 3311639544267691028, guid: 782b52c0a39989c4d81d2693b669855c,
     type: 3}

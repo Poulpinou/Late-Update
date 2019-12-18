@@ -12,11 +12,11 @@ namespace LateUpdate {
     {
         #region Serialized Fields
         [Header("Pickable")]
-        [SerializeField] Item item;
+        [SerializeField] ItemData itemData;
         #endregion
 
         #region Public Properties
-        public Item Item => item;
+        public ItemData ItemData => itemData;
         #endregion
 
         #region Public Methods
@@ -31,14 +31,11 @@ namespace LateUpdate {
             return interactions;
 
         }
-        #endregion
 
-        #region Private Methods
-        internal void SetItem(Item item)
+        public void SetItemDatas(ItemData itemData)
         {
-            this.item = item;
-            name = "Pickable_" + item.itemName;
-            item.pickable = this;
+            this.itemData = itemData;
+            name = "Pickable_" + itemData.Item.itemName;
         }
         #endregion
 
@@ -59,27 +56,12 @@ namespace LateUpdate {
 
             public override void Execute()
             {
-                if (_inventory.Add(_pickable.Item))
+                if (_inventory.Add(_pickable.ItemData))
                 {
                     Destroy(_pickable.gameObject);
                 }
             }
         }
         #endregion
-
-#if UNITY_EDITOR
-        #region Editor Methods
-        [ContextMenu("Link To Item")]
-        void LinkToItem()
-        {
-            if(PrefabUtility.GetCorrespondingObjectFromSource(gameObject) != null)
-            {
-                throw new Exception("This method should be called on prefab!");
-            }
-
-            item.pickable = this;
-        }
-        #endregion
-#endif
     }
 }

@@ -6,12 +6,17 @@ using UnityEngine.EventSystems;
 namespace LateUpdate {
     public class TooltipTarget : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        public string tooltipText;
-        public bool checkDisable = false;
+        [SerializeField] string tooltipText;
+        [SerializeField] bool checkDisable = false;
+
+        public string TooltipText {
+            get => string.IsNullOrEmpty(tooltipText) ? name : tooltipText;
+            set => tooltipText = value;
+        }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Tooltip.Show(tooltipText);
+            Tooltip.Show(TooltipText);
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -21,7 +26,7 @@ namespace LateUpdate {
 
         private void OnMouseEnter()
         {
-            Tooltip.Show(tooltipText);
+            Tooltip.Show(TooltipText);
         }
 
         private void OnMouseExit()
