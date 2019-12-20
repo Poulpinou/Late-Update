@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using System.Linq;
 
 namespace LateUpdate {
-    public class Inventory : MonoBehaviour
+    public class Inventory : MonoBehaviour, IInteractable
     {
         [SerializeField] float capacity;
         [SerializeField] List<ItemData> itemDatas = new List<ItemData>();
@@ -113,6 +113,38 @@ namespace LateUpdate {
         private void Awake()
         {
             UpdateInventory();
+        }
+
+        public List<GameAction> GetPossibleActions(Actor actor)
+        {
+            return new List<GameAction> { new Trade_Action(actor, this) };
+        }
+
+        public class Trade_Action : GameAction
+        {
+            Inventory inventory;
+
+            public override string Name => "Trade";
+
+            public Trade_Action(Actor actor, Inventory target) : base(actor, target) {
+                inventory = target;
+            }
+
+            public override void Execute()
+            {
+                UIManager.CreateFloatingPanel<InventoryPanel>(
+                    Camera.main.WorldToScreenPoint(Target.gameObject.transform.position),
+                    i => {
+                        i.LinkInventory(inventory);
+                        i.CloseCondition = IsTooFar;
+                    }
+                );
+            }
+
+            bool IsTooFar()
+            {
+                return Vector3.Distance(Actor.transform.position, Target.gameObject.transform.position) > 5;
+            }
         }
     }
 }

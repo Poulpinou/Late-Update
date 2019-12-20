@@ -57,7 +57,7 @@ namespace LateUpdate {
         {
             if(tempDragger != null)
             {
-                Destroy(tempDragger);
+                Destroy(tempDragger.gameObject);
                 onDragSlot.Invoke(datas, SlotDragAction.endDrag);
             }
 

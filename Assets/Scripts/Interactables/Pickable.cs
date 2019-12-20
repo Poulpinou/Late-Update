@@ -26,7 +26,7 @@ namespace LateUpdate {
 
             Inventory inventory = actor.GetComponent<Inventory>();
             if (inventory != null && actor.CanMove)
-                interactions.Add(new PickUp(actor, this, inventory));
+                interactions.Add(new PickUp_Action(actor, this, inventory));
 
             return interactions;
 
@@ -40,15 +40,14 @@ namespace LateUpdate {
         #endregion
 
         #region Interactions
-        public class PickUp : GameAction
+        public class PickUp_Action : GameAction
         {
             readonly Inventory _inventory;
             readonly Pickable _pickable;
 
             public override string Name => "Pick up";
-            public override bool NeedsContact => true;
 
-            public PickUp(Actor actor, Pickable pickable, Inventory inventory) : base(actor, pickable)
+            public PickUp_Action(Actor actor, Pickable pickable, Inventory inventory) : base(actor, pickable)
             {
                 _inventory = inventory;
                 _pickable = pickable;

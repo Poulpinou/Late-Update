@@ -43,6 +43,9 @@ namespace LateUpdate {
             float offset = collider.bounds.size.y / 2;
             go.transform.position = position + new Vector3(0, offset, 0);
 
+            InteractionAreaProvider areaProvider = go.AddComponent<InteractionAreaProvider>();
+            areaProvider.FetchRadiusToCollider(collider);
+
             Pickable pickable = go.AddComponent<Pickable>();
             pickable.SetItemDatas(this);
 

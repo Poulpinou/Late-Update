@@ -30,14 +30,17 @@ namespace LateUpdate {
         {
             List<GameAction> actions = new List<GameAction>();
             List<IInteractable> interactables = new List<IInteractable>();
-            interactables.AddRange(actor.GetComponents<IInteractable>());
+
+            //Enable this if extraction from actor is finaly needed
+            //interactables.AddRange(actor.GetComponents<IInteractable>());
+
             interactables.AddRange(target.gameObject.GetComponents<IInteractable>());
 
             foreach (IInteractable interactable in interactables)
             {
                 foreach(GameAction action in interactable.GetPossibleActions(actor))
                 {
-                    if (!actions.Any(a => a.Name == action.Name))
+                    if (action.IsValid && !actions.Any(a => a.Name == action.Name))
                         actions.Add(action);
                 }
             }
