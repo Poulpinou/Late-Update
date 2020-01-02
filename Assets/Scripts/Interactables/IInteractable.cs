@@ -8,10 +8,30 @@ namespace LateUpdate {
     /// </summary>
     public interface IInteractable
     {
-        Transform InteractionTransform { get; }
-        float InteractionRadius { get; }
         GameObject gameObject { get; }
 
         List<GameAction> GetPossibleActions(Actor actor);
+    }
+
+    public static class InteractableExtentions
+    {
+        public static InteractionArea GetInteractionArea(this IInteractable interactable)
+        {
+            InteractionAreaProvider areaProvider = interactable.gameObject.GetComponent<InteractionAreaProvider>();
+            if (areaProvider != null)
+                return areaProvider.InteractionArea;
+
+            InteractionArea area = new InteractionArea
+            {
+                point = interactable.gameObject.transform,
+                radius = 1
+            };
+
+            Collider collider = interactable.gameObject.GetComponent<Collider>();
+            if(collider != null)
+                area.ComputeRadiusFromCollider(collider, 1);
+
+            return area;
+        } 
     }
 }

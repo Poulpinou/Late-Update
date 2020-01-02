@@ -4,29 +4,20 @@ using UnityEngine;
 
 namespace LateUpdate {
     public class Character : Actor, IInteractable
-    {
-        public Transform InteractionTransform => transform;
-
-        public float InteractionRadius => 0.1f;
-
+    { 
         public virtual List<GameAction> GetPossibleActions(Actor actor)
         {
-            List<GameAction> actions = new List<GameAction>();
-
-            if(gameObject != actor.gameObject)
-                actions.Add(new Follow(actor, this));
-
-            return actions;
+            return new List<GameAction> { new Follow_Action(actor, this) };
         }
 
         #region Game Actions
-        public class Follow : GameAction
+        public class Follow_Action : GameAction
         {
             public override string Name => "Follow";
 
             public override bool NeedsContact => false;
 
-            public Follow(Actor actor, IInteractable interactable) : base(actor, interactable) { }
+            public Follow_Action(Actor actor, IInteractable interactable) : base(actor, interactable) { }
 
             public override void Execute()
             {

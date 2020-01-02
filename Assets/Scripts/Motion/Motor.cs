@@ -96,7 +96,7 @@ namespace LateUpdate
 
         protected bool PathComplete()
         {
-            if (!agent.pathPending && agent.remainingDistance <= destinationThreshold)
+            if (!agent.pathPending && agent.remainingDistance <= destinationThreshold + agent.stoppingDistance)
             {
                 if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
                     return true;
@@ -111,8 +111,10 @@ namespace LateUpdate
         {
             Clear();
 
-            agent.stoppingDistance = newTarget.InteractionRadius * 0.8f;
-            target = newTarget.InteractionTransform;
+            InteractionArea area = newTarget.GetInteractionArea();
+
+            agent.stoppingDistance = area.radius;
+            target = area.point;
             agent.SetDestination(target.position);
 
             while (!PathComplete())
@@ -142,8 +144,11 @@ namespace LateUpdate
         IEnumerator KeepFollowingTarget(IInteractable newTarget)
         {
             Clear();
-            agent.stoppingDistance = newTarget.InteractionRadius * 0.8f + followDistance;
-            target = newTarget.InteractionTransform;
+
+            InteractionArea area = newTarget.GetInteractionArea();
+
+            agent.stoppingDistance = area.radius + followDistance;
+            target = area.point;
 
             while (target != null)
             {

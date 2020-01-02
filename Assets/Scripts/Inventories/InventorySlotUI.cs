@@ -29,7 +29,14 @@ namespace LateUpdate {
 
         #region Events
         public class DragSlotEvent : UnityEvent<ItemData, SlotDragAction> { }
+        /// <summary>
+        /// This Event is Called when the slot is dragged
+        /// </summary>
         public DragSlotEvent onDragSlot = new DragSlotEvent();
+        #endregion
+
+        #region Public Properties
+        public ItemData ItemData => datas;
         #endregion
 
         #region Public Methods
@@ -57,12 +64,12 @@ namespace LateUpdate {
         {
             if(tempDragger != null)
             {
-                Destroy(tempDragger);
+                Destroy(tempDragger.gameObject);
                 onDragSlot.Invoke(datas, SlotDragAction.endDrag);
             }
 
             icon.enabled = true;
-            
+            EventSystem.current.SetSelectedGameObject(null);
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -71,6 +78,7 @@ namespace LateUpdate {
             tempDragger.rectTransform.sizeDelta = icon.rectTransform.sizeDelta;
             icon.enabled = false;
 
+            EventSystem.current.SetSelectedGameObject(gameObject);
             onDragSlot.Invoke(datas, SlotDragAction.startDrag);
         }
 

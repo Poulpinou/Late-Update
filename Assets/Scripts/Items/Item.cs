@@ -24,11 +24,6 @@ namespace LateUpdate {
         {
             Debug.Log("Using " + itemName);
         }
-
-        public virtual ItemData CreateDefaultDatas()
-        {
-            return new ItemData(this, 1);
-        }
         #endregion
 
         #region Editor Methods

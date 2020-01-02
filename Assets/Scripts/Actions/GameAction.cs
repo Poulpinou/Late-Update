@@ -25,7 +25,15 @@ namespace LateUpdate {
         /// <summary>
         /// If true, the controller will walk to the target if it can move
         /// </summary>
-        public abstract bool NeedsContact { get; }
+        public virtual bool NeedsContact => true;
+        /// <summary>
+        /// If false, the <see cref="Actor"/> and the <see cref="Target"/> should be different
+        /// </summary>
+        public virtual bool CanApplyOnSelf => false;
+        /// <summary>
+        /// Returns true if the action is valid
+        /// </summary>
+        public virtual bool IsValid => CanApplyOnSelf || Target.gameObject != Actor.gameObject;
         #endregion
 
         #region Constructors
