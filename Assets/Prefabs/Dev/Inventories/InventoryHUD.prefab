@@ -176,7 +176,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b9dc9e80b909494897b3e60c1fd6b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: Drop Item
   checkDisable: 1
 --- !u!1 &117206961752132686
 GameObject:
@@ -190,7 +189,7 @@ GameObject:
   - component: {fileID: 1374093815212260034}
   - component: {fileID: 2815198452260148281}
   - component: {fileID: 1530759621987511250}
-  - component: {fileID: 6564542384262681412}
+  - component: {fileID: 2745517901092218029}
   m_Layer: 5
   m_Name: AmountOrder
   m_TagString: Untagged
@@ -308,7 +307,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &6564542384262681412
+--- !u!114 &2745517901092218029
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -317,11 +316,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 117206961752132686}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b9dc9e80b909494897b3e60c1fd6b76, type: 3}
+  m_Script: {fileID: 11500000, guid: 48679076988869148a88703ec3a8ed87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tooltipText: Sort by Amount
-  checkDisable: 0
+  priority: 0
 --- !u!1 &481519165502313418
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,7 +333,7 @@ GameObject:
   - component: {fileID: 4437738918734726442}
   - component: {fileID: 2615174324295486094}
   - component: {fileID: 1439451359407358651}
-  - component: {fileID: 5936828258506947950}
+  - component: {fileID: 5275482362196548586}
   m_Layer: 5
   m_Name: AZOrder
   m_TagString: Untagged
@@ -452,7 +451,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &5936828258506947950
+--- !u!114 &5275482362196548586
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -461,11 +460,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 481519165502313418}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b9dc9e80b909494897b3e60c1fd6b76, type: 3}
+  m_Script: {fileID: 11500000, guid: 48679076988869148a88703ec3a8ed87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: Sort Alphabetically
-  checkDisable: 0
+  tooltipText: Sort A to Z
+  priority: 0
 --- !u!1 &763997686168628148
 GameObject:
   m_ObjectHideFlags: 0
@@ -907,7 +906,7 @@ GameObject:
   - component: {fileID: 763997687037665679}
   - component: {fileID: 4990602145831636760}
   m_Layer: 5
-  m_Name: InventoryUI_V2
+  m_Name: InventoryHUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -981,12 +980,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23bc97fdd77879e4a92c08d9dee11160, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  switchablePanel: {fileID: 2664021716417620120}
   inventorySlotsParent: {fileID: 763997688138735863}
   fillBar: {fileID: 763997687104083861}
-  trashHandler: {fileID: 1790898550}
   inventorySlotModel: {fileID: 2594918154363622257, guid: b1f4a90e71192024c8ef64d3a8d3a157,
     type: 3}
+  trashHandler: {fileID: 1790898550}
 --- !u!1 &763997687104083867
 GameObject:
   m_ObjectHideFlags: 0
@@ -1242,7 +1240,7 @@ GameObject:
   - component: {fileID: 763997687964695058}
   - component: {fileID: 763997687964695059}
   - component: {fileID: 441473258507933600}
-  - component: {fileID: 1750455575178306024}
+  - component: {fileID: 8777882181716199005}
   m_Layer: 5
   m_Name: InventoryButton
   m_TagString: Untagged
@@ -1360,7 +1358,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1750455575178306024
+--- !u!114 &8777882181716199005
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1369,11 +1367,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 763997687964695057}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b9dc9e80b909494897b3e60c1fd6b76, type: 3}
+  m_Script: {fileID: 11500000, guid: 48679076988869148a88703ec3a8ed87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: Open Inventory
-  checkDisable: 0
+  tooltipText: Inventory
+  priority: 0
 --- !u!1 &763997688008679506
 GameObject:
   m_ObjectHideFlags: 0
@@ -1801,7 +1799,7 @@ GameObject:
   - component: {fileID: 3808637037462606604}
   - component: {fileID: 915112474521493389}
   - component: {fileID: 4123439915798971776}
-  - component: {fileID: 8412317746095381708}
+  - component: {fileID: 1657212780160521240}
   m_Layer: 5
   m_Name: NoneOrder
   m_TagString: Untagged
@@ -1919,7 +1917,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &8412317746095381708
+--- !u!114 &1657212780160521240
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1928,11 +1926,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3584648279223018983}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b9dc9e80b909494897b3e60c1fd6b76, type: 3}
+  m_Script: {fileID: 11500000, guid: 48679076988869148a88703ec3a8ed87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tooltipText: Cancel Sorting
-  checkDisable: 0
+  priority: 0
 --- !u!1 &6205280929360285666
 GameObject:
   m_ObjectHideFlags: 0
@@ -1945,7 +1943,7 @@ GameObject:
   - component: {fileID: 6316569567453990879}
   - component: {fileID: 2792619636510347138}
   - component: {fileID: 5579555723406882370}
-  - component: {fileID: 3459803320782702266}
+  - component: {fileID: 9024859082221113170}
   m_Layer: 5
   m_Name: EncumbranceOrder
   m_TagString: Untagged
@@ -2063,7 +2061,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &3459803320782702266
+--- !u!114 &9024859082221113170
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2072,11 +2070,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6205280929360285666}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b9dc9e80b909494897b3e60c1fd6b76, type: 3}
+  m_Script: {fileID: 11500000, guid: 48679076988869148a88703ec3a8ed87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tooltipText: Sort by Encumbrance
-  checkDisable: 0
+  priority: 0
 --- !u!1 &6410194447242133264
 GameObject:
   m_ObjectHideFlags: 0

@@ -66,6 +66,8 @@ namespace LateUpdate {
             Pickable pickable = go.AddComponent<Pickable>();
             pickable.SetItemDatas(this);
 
+            go.AddComponent<TooltipTarget>();
+
             return pickable;
         }
     }

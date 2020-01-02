@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 namespace LateUpdate {
-    public class Actor : MonoBehaviour
+    public class Actor : MonoBehaviour, ITooltipable
     {
         #region Serialized Fields
         [Header("Identity")]
@@ -27,6 +27,8 @@ namespace LateUpdate {
         /// The <see cref="GameAction"/> currently performed by this <see cref="Actor"/>
         /// </summary>
         public GameAction CurrentAction { get; protected set; }
+        public string TooltipText => infos.name;
+        public int Priority => -1;
         #endregion
 
         #region Public Methods
@@ -67,6 +69,15 @@ namespace LateUpdate {
         {
             Motor = GetComponent<Motor>();
         }
+        #endregion
+
+        #region Editor Methods
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            gameObject.name = GetType().Name + "_" + Infos.name;
+        }
+#endif
         #endregion
 
         #region Internal Classes

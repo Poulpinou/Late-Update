@@ -8,7 +8,7 @@ using UnityEditor;
 #endif
 
 namespace LateUpdate {
-    public class Pickable : Interactable
+    public class Pickable : Interactable, ITooltipable
     {
         #region Serialized Fields
         [Header("Pickable")]
@@ -17,6 +17,8 @@ namespace LateUpdate {
 
         #region Public Properties
         public ItemData ItemData => itemData;
+        public virtual string TooltipText => itemData.ToString();
+        public virtual int Priority => 0;
         #endregion
 
         #region Public Methods

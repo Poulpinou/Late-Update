@@ -2,16 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Linq;
 
 namespace LateUpdate {
     public class TooltipTarget : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        [SerializeField] string tooltipText;
         [SerializeField] bool checkDisable = false;
 
-        public string TooltipText {
-            get => string.IsNullOrEmpty(tooltipText) ? name : tooltipText;
-            set => tooltipText = value;
+        public virtual string TooltipText {
+            get
+            {
+                IEnumerable<ITooltipable> tooltipables = GetComponents<ITooltipable>().OrderBy(t => t.Priority);
+                string text = "";
+                foreach (ITooltipable tooltipable in tooltipables)
+                {
+                    text += tooltipable.TooltipText;
+                }
+
+                return text;
+            }
         }
 
         public void OnPointerEnter(PointerEventData eventData)
