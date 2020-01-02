@@ -8,8 +8,8 @@ namespace LateUpdate {
         [SerializeField] DropHandler trashHandler;
         #endregion
 
-        #region Private Variables
-        ItemData tempDatas;
+        #region Public Properties
+        public override bool DestroyIfControlChanged => false;
         #endregion
 
         #region Public Methods
@@ -30,13 +30,18 @@ namespace LateUpdate {
         #region Private Methods
         protected override void OnSlotDrag(ItemData itemData, InventorySlotUI.SlotDragAction dragAction)
         {
+            base.OnSlotDrag(itemData, dragAction);
             switch (dragAction)
             {
                 case InventorySlotUI.SlotDragAction.startDrag:
                     trashHandler.gameObject.SetActive(true);
-                    tempDatas = itemData;
                     trashHandler.onDrop.AddListener(delegate {
-                        ActionManager.OpenAmountPopup(PerformDrop, tempDatas.Amount, tempDatas.Amount, 0);
+                        ActionManager.OpenAmountPopup(
+                            new AmountCallback<ItemData>(PerformDrop, itemData), 
+                            itemData.Amount, 
+                            itemData.Amount, 
+                            0
+                        );
                     });
                     break;
                 case InventorySlotUI.SlotDragAction.drag:
@@ -45,19 +50,12 @@ namespace LateUpdate {
                     trashHandler.gameObject.SetActive(false);
                     trashHandler.onDrop.RemoveAllListeners();
                     break;
-                default:
-                    break;
             }
         }
 
-        /// <summary>
-        /// Drops <see cref="tempDatas"/> (is called by <see cref="AmountPopup"/>)
-        /// </summary>
-        /// <param name="amount">The amount to drop</param>
-        void PerformDrop(int amount)
+        void PerformDrop(ItemData target, int amount)
         {
-            Inventory.Drop(tempDatas.Item, amount);
-            tempDatas = null;
+            Inventory.Drop(target.TakeAmount(amount));
         }
 
         void OnCurrentControllerChanged(Controller controller)

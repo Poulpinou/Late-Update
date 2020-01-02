@@ -32,6 +32,10 @@ namespace LateUpdate {
         public DragSlotEvent onDragSlot = new DragSlotEvent();
         #endregion
 
+        #region Public Properties
+        public ItemData ItemData => datas;
+        #endregion
+
         #region Public Methods
         public void SetData(ItemData itemData)
         {
@@ -62,7 +66,7 @@ namespace LateUpdate {
             }
 
             icon.enabled = true;
-            
+            EventSystem.current.SetSelectedGameObject(null);
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -71,6 +75,7 @@ namespace LateUpdate {
             tempDragger.rectTransform.sizeDelta = icon.rectTransform.sizeDelta;
             icon.enabled = false;
 
+            EventSystem.current.SetSelectedGameObject(gameObject);
             onDragSlot.Invoke(datas, SlotDragAction.startDrag);
         }
 

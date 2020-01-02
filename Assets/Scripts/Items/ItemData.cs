@@ -9,28 +9,45 @@ namespace LateUpdate {
     {
         [SerializeField] protected Item item;
         [SerializeField] protected int amount;
+        Inventory inventory;
 
         public Item Item => item;
         public virtual int Amount { get => amount; set => amount = value; }
         public virtual float Encumbrance => item.encumbrance * amount;
+        public virtual Inventory Inventory { get => inventory; internal set => inventory = value; }
 
-        public ItemData(Item item, int amount = 1)
+        public ItemData(Inventory inventory, Item item, int amount = 1)
         {
+            this.inventory = inventory;
             this.item = item;
             this.amount = amount;
         }
 
-        public ItemData Take(int amount)
+        public ItemData(Item item, int amount = 1) : this(null, item, amount) { }
+
+        public override string ToString()
         {
-            if (amount > this.amount)
-                throw new Exception("Impossible to take that much!");
+            return string.Format("{0}(x{1})", item.itemName, amount);
+        }
 
-            this.amount -= amount;
+        public bool MoveTo(Inventory inventory)
+        {
+            if(inventory.CanAdd(this) && Inventory.Remove(this))
+            {
+                return inventory.Add(this);
+            }
+            return false;
+        }
 
-            ItemData datas = item.CreateDefaultDatas();
-            datas.Amount = amount;
+        public ItemData TakeAmount(int amount, bool affectInstance = false)
+        {
+            if (this.amount < amount)
+                amount = this.amount;
 
-            return datas;
+            if(affectInstance)
+                Amount -= amount;
+
+            return new ItemData(inventory, item, amount);
         }
 
         public Pickable SpawnItem(Vector3 position)

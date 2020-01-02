@@ -9,14 +9,15 @@ namespace LateUpdate {
     {
         [SerializeField] InputField field;
 
-        Action<int> action;
+        AmountCallback action;
         int value;
         int max;
         int min;
 
-        public void Configure(Action<int> action, int defaultAmount, int maxAmount = 100, int minAmount = 0)
+        public void Configure(AmountCallback action, int defaultAmount, int maxAmount = 100, int minAmount = 0)
         {
             this.action = action;
+
             max = maxAmount;
             min = minAmount;
 
@@ -32,7 +33,7 @@ namespace LateUpdate {
 
         public void Confirm()
         {
-            action.Invoke(value);
+            action.Perform(value);
             Destroy(gameObject);
         }
 
@@ -63,6 +64,28 @@ namespace LateUpdate {
         {
             if (Input.GetButtonDown("Submit")) Confirm();
             if (Input.GetButtonDown("Cancel")) Cancel();
+        }
+    }
+
+    public abstract class AmountCallback
+    {
+        public abstract void Perform(int amount);
+    }
+
+    public class AmountCallback<TTarget> : AmountCallback
+    {
+        Action<TTarget, int> action;
+        TTarget target;
+
+        public AmountCallback(Action<TTarget, int> callback, TTarget target)
+        {
+            action = callback;
+            this.target = target;
+        }
+
+        public override void Perform(int amount)
+        {
+            action.Invoke(target, amount);
         }
     }
 }

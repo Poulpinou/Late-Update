@@ -676,7 +676,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0.1171875, y: 0.03125, z: 0.02734375, w: -0.03125}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -2079,11 +2079,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   capacity: 10
-  itemDatas:
-  - item: {fileID: 11400000, guid: b80e9e5d5e27fb1449d2f592df7e2459, type: 2}
-    amount: 1
-  - item: {fileID: 11400000, guid: 9f2d6eaaac104b44baeab356935c6dfd, type: 2}
-    amount: 5
+  defaultItems: []
 --- !u!114 &2058927542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2097,7 +2093,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   infos:
-    name: Louisette
+    name: "Mich\xE8le"
     description: "Il faut vraiment que je songe \xE0 lui trouver un background..."
     routineSentences:
     - Bloup bloup bloup...
@@ -2460,13 +2456,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   capacity: 10
-  itemDatas:
-  - item: {fileID: 11400000, guid: 9f2d6eaaac104b44baeab356935c6dfd, type: 2}
-    amount: 5
+  defaultItems:
   - item: {fileID: 11400000, guid: b80e9e5d5e27fb1449d2f592df7e2459, type: 2}
     amount: 2
   - item: {fileID: 11400000, guid: 48a8c07c495b9ed45a726de402c31e1e, type: 2}
     amount: 1
+  - item: {fileID: 11400000, guid: 9f2d6eaaac104b44baeab356935c6dfd, type: 2}
+    amount: 5
 --- !u!114 &3344151864833139568
 MonoBehaviour:
   m_ObjectHideFlags: 0

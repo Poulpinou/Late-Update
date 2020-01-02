@@ -73,7 +73,7 @@ namespace LateUpdate {
             return popup;
         }
 
-        public static AmountPopup OpenAmountPopup(Action<int> action, int defaultAmount, int maxAmount = 100, int minAmount = 0, Vector2? screenPosition = null)
+        public static AmountPopup OpenAmountPopup(AmountCallback action, int defaultAmount, int maxAmount = 100, int minAmount = 0, Vector2? screenPosition = null)
         {
             Vector2 pos = screenPosition.HasValue ? screenPosition.Value : (Vector2)Input.mousePosition;
 

@@ -8,7 +8,9 @@ namespace LateUpdate {
     public class Inventory : MonoBehaviour, IInteractable
     {
         [SerializeField] float capacity;
-        [SerializeField] List<ItemData> itemDatas = new List<ItemData>();
+        [SerializeField] List<ItemData> defaultItems = new List<ItemData>();
+
+        List<ItemData> itemDatas;
 
         public class InventoryUpdateEvent : UnityEvent { }
         public InventoryUpdateEvent onInventoryUpdate = new InventoryUpdateEvent();
@@ -19,85 +21,87 @@ namespace LateUpdate {
 
         public bool Add(Item item, int amount = 1)
         {
-            if(CanAdd(item, amount))
-            {
-                ItemData data = itemDatas.Where(i => i.Item == item).FirstOrDefault();
-
-                if (data == null)
-                {
-                    data = item.CreateDefaultDatas();
-                    data.Amount = amount;
-                    itemDatas.Add(data);
-                }
-                else
-                {
-                    data.Amount += amount;
-                }
-
-                UpdateInventory();
-                return true;
-            }
-            else
-            {
-                MessageManager.Send(string.Format(
-                    "Impossible to add {0} {1} to inventory, not enough capacity",
-                    amount,
-                    item.itemName
-                ), LogType.Warning);
-                return false;
-            }
+            return Add(new ItemData(item, amount));
         }
 
         public bool Add(ItemData itemData)
         {
-            return Add(itemData.Item, itemData.Amount);
+            if (!CanAdd(itemData)) return false;
+
+            ItemData localData = itemDatas.Where(i => i.Item == itemData.Item).FirstOrDefault();
+
+            if (localData == null)
+            {
+                itemData.Inventory = this;
+                itemDatas.Add(itemData);
+            }
+            else
+            {
+                localData.Amount += itemData.Amount;
+            }
+
+            UpdateInventory();
+            return true;
         }
 
-        public bool Remove(Item item, int amount = 1)
+        public bool Remove(ItemData itemData)
         {
-            ItemData data = itemDatas.Where(i => i.Item == item).FirstOrDefault();
-            if (data == null) { 
+            ItemData localData = itemDatas.Where(i => i.Item == itemData.Item).FirstOrDefault();
+            if (localData == null)
+            {
                 MessageManager.Send(string.Format(
                     "No {0} found in inventory",
-                    item.itemName
+                    itemData.Item.itemName
                 ), LogType.Error);
                 return false;
             }
             else
             {
-                data.Amount -= amount;
-                if(data.Amount <= 0)
+                localData.Amount -= itemData.Amount;
+                if (localData.Amount <= 0)
                 {
-                    itemDatas.Remove(data);
+                    itemDatas.Remove(localData);
                 }
                 UpdateInventory();
                 return true;
             }
-        }
-
-        public bool Remove(ItemData itemData)
-        {
-            return Remove(itemData.Item, itemData.Amount);
         }
 
         public void Drop(ItemData data)
         {
             if (Remove(data))
             {
+                data.Inventory = null;
                 data.SpawnItem(transform.position);
             }
         }
 
-        public void Drop(Item item, int amount = 1)
+        public bool CanAdd(ItemData itemData)
         {
-            ItemData data = item.CreateDefaultDatas();
-            data.Amount = amount;
-            Drop(data);
-        }
+            if (itemData.Inventory == this)
+            {
+                Debug.LogError(
+                    string.Format(
+                        "Tried to add {0} to its own inventory ({1})",
+                        itemData,
+                        name
+                    )
+                );
+                return false;
+            }
 
-        public bool CanAdd(Item item, int amount = 1)
-        {
-            return Encumbrance + item.encumbrance * amount < capacity;
+            if (Encumbrance + itemData.Encumbrance > capacity)
+            {
+                Debug.LogError(
+                    string.Format(
+                        "Impossible to add {0} to inventory, not enough capacity",
+                        itemData
+                    )
+                );
+                return false;
+            }
+
+            return true;
         }
 
         public float GetFillPercent()
@@ -110,8 +114,19 @@ namespace LateUpdate {
             onInventoryUpdate.Invoke();
         }
 
+        void InitializeDatas()
+        {
+            itemDatas = new List<ItemData>();
+            foreach(ItemData data in defaultItems)
+            {
+                data.Inventory = this;
+                itemDatas.Add(data);
+            }
+        }
+
         private void Awake()
         {
+            InitializeDatas();
             UpdateInventory();
         }
 

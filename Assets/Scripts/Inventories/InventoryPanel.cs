@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Linq;
 
 namespace LateUpdate
 {
-    public class InventoryPanel : UIPanel
+    public class InventoryPanel : UIPanel, IDropHandler
     {
         #region Enums
         public enum SortingOrder { none, AZ, encumbrance, amount }
@@ -38,11 +39,21 @@ namespace LateUpdate
             }
 
             Inventory = inventory;
-            OnInventoryUpdate();
+            if(Inventory != null)
+            {
+                OnInventoryUpdate();
+                Inventory.onInventoryUpdate.AddListener(OnInventoryUpdate);
 
-            inventory.onInventoryUpdate.AddListener(OnInventoryUpdate);
-
-            PanelName = "Inventory (" + inventory.gameObject.name + ")";
+                Actor actor = inventory.GetComponent<Actor>();
+                if(actor != null)
+                {
+                    PanelName = actor.Infos.name + "'s Inventory";
+                }
+                else
+                {
+                    PanelName = "Inventory";
+                }
+            }
         }
 
         public void ChangeSortingOrder(SortingOrder order)
@@ -55,9 +66,31 @@ namespace LateUpdate
         {
             ChangeSortingOrder((SortingOrder)order);
         }
+
+        public void OnDrop(PointerEventData eventData)
+        {
+            if (eventData.selectedObject == null) return;
+
+            InventorySlotUI slotUI = eventData.selectedObject.GetComponent<InventorySlotUI>();
+            if (slotUI == null) return;
+
+            ItemData itemData = slotUI.ItemData;
+            if (itemData.Inventory == Inventory) return;
+
+            ActionManager.OpenAmountPopup(
+                new AmountCallback<ItemData>(OnDrop, itemData),
+                itemData.Amount,
+                itemData.Amount
+            );
+        }
         #endregion
 
         #region Private Methods
+        protected virtual void OnDrop(ItemData itemData, int amount)
+        {
+            itemData.TakeAmount(amount).MoveTo(Inventory);
+        }
+
         protected virtual void RefreshInventorySlots()
         {
             InventorySlotUI[] slots = inventorySlotsParent.GetComponentsInChildren<InventorySlotUI>();
@@ -98,6 +131,7 @@ namespace LateUpdate
 
         protected virtual void OnInventoryUpdate()
         {
+            if (Inventory == null) return;
             RefreshFillBar();
             RefreshInventorySlots();
         }
