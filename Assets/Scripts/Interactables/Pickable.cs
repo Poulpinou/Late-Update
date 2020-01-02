@@ -7,57 +7,62 @@ using System;
 using UnityEditor;
 #endif
 
-namespace TinyRPG {
-    public class Pickable : Interactable
+namespace LateUpdate {
+    public class Pickable : Interactable, ITooltipable
     {
         #region Serialized Fields
         [Header("Pickable")]
-        [SerializeField] Item item;
+        [SerializeField] ItemData itemData;
         #endregion
 
         #region Public Properties
-        public Item Item => item;
+        public ItemData ItemData => itemData;
+        public virtual string TooltipText => itemData.ToString();
+        public virtual int Priority => 0;
         #endregion
 
-        #region Private Methods
-        internal void SetItem(Item item)
+        #region Public Methods
+        public override List<GameAction> GetPossibleActions(Actor actor)
         {
-            this.item = item;
-            name = "Pickable_" + item.itemName;
-            item.pickable = this;
-        }
+            List<GameAction> interactions = new List<GameAction>();
 
-        protected override void Interact()
-        {
-            PickUp();
-        }
-
-        protected virtual void PickUp()
-        {
             Inventory inventory = actor.GetComponent<Inventory>();
-            if (inventory == null)
-                throw new Exception(string.Format("{0} can't pickup {1} because it has no Inventory attached to it!", actor.name, item.itemName));
+            if (inventory != null && actor.CanMove)
+                interactions.Add(new PickUp_Action(actor, this, inventory));
 
-            if (inventory.Add(item))
-            {          
-                Destroy(gameObject);
-            } 
+            return interactions;
+
+        }
+
+        public void SetItemDatas(ItemData itemData)
+        {
+            this.itemData = itemData;
+            name = "Pickable_" + itemData.Item.itemName;
         }
         #endregion
 
-#if UNITY_EDITOR
-        #region Editor Methods
-        [ContextMenu("Link To Item")]
-        void LinkToItem()
+        #region Interactions
+        public class PickUp_Action : GameAction
         {
-            if(PrefabUtility.GetCorrespondingObjectFromSource(gameObject) != null)
+            readonly Inventory _inventory;
+            readonly Pickable _pickable;
+
+            public override string Name => "Pick up";
+
+            public PickUp_Action(Actor actor, Pickable pickable, Inventory inventory) : base(actor, pickable)
             {
-                throw new Exception("This method should be called on prefab!");
+                _inventory = inventory;
+                _pickable = pickable;
             }
 
-            item.pickable = this;
+            public override void Execute()
+            {
+                if (_inventory.Add(_pickable.ItemData))
+                {
+                    Destroy(_pickable.gameObject);
+                }
+            }
         }
         #endregion
-#endif
     }
 }

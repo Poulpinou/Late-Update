@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System;
 
-namespace TinyRPG {
+namespace LateUpdate {
     public class CameraManager : StaticManager<CameraManager>
     {
         #region Serialized Fields

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TinyRPG {
+namespace LateUpdate {
     public class StaticManager<TManager> : MonoBehaviour where TManager : StaticManager<TManager>
     {
         #region Serialized Fields
