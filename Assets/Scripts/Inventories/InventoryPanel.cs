@@ -10,6 +10,9 @@ namespace LateUpdate
     public class InventoryPanel : UIPanel, IDropHandler
     {
         #region Enums
+        /// <summary>
+        /// The sorting order type for <see cref="ItemData"/>
+        /// </summary>
         public enum SortingOrder { none, AZ, encumbrance, amount }
         #endregion
 
@@ -27,10 +30,17 @@ namespace LateUpdate
         #endregion
 
         #region Public Properties
+        /// <summary>
+        /// The linked <see cref="LateUpdate.Inventory"/>
+        /// </summary>
         public Inventory Inventory { get; protected set; }
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Attaches this UI to an <see cref="LateUpdate.Inventory"/>
+        /// </summary>
+        /// <param name="inventory"></param>
         public virtual void LinkInventory(Inventory inventory)
         {
             if (Inventory != null)
@@ -56,17 +66,24 @@ namespace LateUpdate
             }
         }
 
+        /// <summary>
+        /// Changes the current <see cref="sortingOrder"/>
+        /// </summary>
+        /// <param name="order">The new order</param>
         public void ChangeSortingOrder(SortingOrder order)
         {
             sortingOrder = order;
             RefreshInventorySlots();
         }
 
+        /// <summary>
+        /// Changes the current <see cref="sortingOrder"/>
+        /// </summary>
+        /// <param name="order">The index of the <see cref="SortingOrder"/></param>
         public void ChangeSortingOrder(int order)
         {
             ChangeSortingOrder((SortingOrder)order);
         }
-
         public void OnDrop(PointerEventData eventData)
         {
             if (eventData.selectedObject == null) return;

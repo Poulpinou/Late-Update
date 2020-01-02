@@ -54,7 +54,7 @@ namespace LateUpdate {
         /// <param name="actor">The <see cref="Actor"/> that will perform the action</param>
         /// <param name="target">The <see cref="IInteractable"/> that will be the target of the action</param>
         /// <param name="screenPosition">The position on the screen (= mouse position by default)</param>
-        /// <returns>The instantiated action popup</returns>
+        /// <returns>The instantiated <see cref="AmountPopup"/></returns>
         public static ActionPopup OpenActionPopup(Actor actor, IInteractable target, Vector2? screenPosition = null)
         {
             List<GameAction> actions = ExtractActions(actor, target);
@@ -73,13 +73,19 @@ namespace LateUpdate {
             return popup;
         }
 
-        public static AmountPopup OpenAmountPopup(AmountCallback action, int defaultAmount, int maxAmount = 100, int minAmount = 0, Vector2? screenPosition = null)
+        /// <summary>
+        /// Opens an <see cref="AmountPopup"/> at <paramref name="screenPosition"/>
+        /// </summary>
+        /// <param name="callback">The <see cref="AmountCallback"/> called when amount has been choosen</param>
+        /// <param name="screenPosition">The position on the screen (= mouse position by default)</param>
+        /// <returns>The instantiated <see cref="AmountPopup"/></returns>
+        public static AmountPopup OpenAmountPopup(AmountCallback callback, int defaultAmount, int maxAmount = 100, int minAmount = 0, Vector2? screenPosition = null)
         {
             Vector2 pos = screenPosition.HasValue ? screenPosition.Value : (Vector2)Input.mousePosition;
 
             AmountPopup popup = Instantiate(Active.amountPopupModel, GameManager.UIRoot);
             popup.transform.position = pos;
-            popup.Configure(action, defaultAmount, maxAmount, minAmount);
+            popup.Configure(callback, defaultAmount, maxAmount, minAmount);
 
             return popup;
         }

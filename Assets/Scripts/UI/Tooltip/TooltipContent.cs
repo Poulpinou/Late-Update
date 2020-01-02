@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace LateUpdate {
+    /// <summary>
+    /// An extension of <see cref="TooltipTarget"/> with static content
+    /// </summary>
     public class TooltipContent : TooltipTarget, ITooltipable
     {
+        [Header("Content")]
         [SerializeField] string tooltipText;
         [SerializeField] int priority;
 

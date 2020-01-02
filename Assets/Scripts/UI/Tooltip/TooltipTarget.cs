@@ -5,8 +5,14 @@ using UnityEngine.EventSystems;
 using System.Linq;
 
 namespace LateUpdate {
+    /// <summary>
+    /// Add this to a <see cref="GameObject"/> to draw text in <see cref="Tooltip"/> on mouseover
+    /// The text will be defined by every <see cref="ITooltipable"/> on this object
+    /// </summary>
     public class TooltipTarget : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
+        [Header("Settings")]
+        [Tooltip("If true, the tooltip will hide OnDestroy() and OnDisable()")]
         [SerializeField] bool checkDisable = false;
 
         public virtual string TooltipText {

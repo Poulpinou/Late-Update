@@ -5,25 +5,62 @@ using UnityEngine.Events;
 using System.Linq;
 
 namespace LateUpdate {
+    /// <summary>
+    /// Attach this to a <see cref="GameObject"/> to provide it an inventory
+    /// </summary>
     public class Inventory : MonoBehaviour, IInteractable
     {
+        #region Serialized Fields
+        //TODO : Move this to stats
         [SerializeField] float capacity;
+        [Tooltip("Items that exists by default in this inventory")]
         [SerializeField] List<ItemData> defaultItems = new List<ItemData>();
+        #endregion
 
+        #region Private Fields
         List<ItemData> itemDatas;
+        #endregion
 
+        #region Events
         public class InventoryUpdateEvent : UnityEvent { }
+        /// <summary>
+        /// Is called when inventory content changed
+        /// </summary>
         public InventoryUpdateEvent onInventoryUpdate = new InventoryUpdateEvent();
+        #endregion
 
+        #region Public Properties
+        /// <summary>
+        /// The total encumbrance of the inventory
+        /// </summary>
         public float Encumbrance => itemDatas.Sum(i => i.Encumbrance);
+        /// <summary>
+        /// The max <see cref="Encumbrance"/> of the inventory
+        /// </summary>
         public float Capacity => capacity;
+        /// <summary>
+        /// The datas of every items of the inventory
+        /// </summary>
         public List<ItemData> ItemDatas => itemDatas;
+        #endregion
 
+        #region Public Methods
+        /// <summary>
+        /// Adds <paramref name="amount"/> x <paramref name="item"/> to the <see cref="Inventory"/>
+        /// </summary>
+        /// <param name="item">The type of item to add</param>
+        /// <param name="amount">The amount of item to add</param>
+        /// <returns>True if success</returns>
         public bool Add(Item item, int amount = 1)
         {
             return Add(new ItemData(item, amount));
         }
 
+        /// <summary>
+        /// Adds <paramref name="itemData"/> to <see cref="Inventory"/>
+        /// </summary>
+        /// <param name="itemData">Datas to add</param>
+        /// <returns>True if success</returns>
         public bool Add(ItemData itemData)
         {
             if (!CanAdd(itemData)) return false;
@@ -44,6 +81,11 @@ namespace LateUpdate {
             return true;
         }
 
+        /// <summary>
+        /// Removes <paramref name="itemData"/> from <see cref="Inventory"/>
+        /// </summary>
+        /// <param name="itemData">Datas to remove</param>
+        /// <returns>True if success</returns>
         public bool Remove(ItemData itemData)
         {
             ItemData localData = itemDatas.Where(i => i.Item == itemData.Item).FirstOrDefault();
@@ -67,6 +109,10 @@ namespace LateUpdate {
             }
         }
 
+        /// <summary>
+        /// Drops <paramref name="data"/> from <see cref="Inventory"/> and spawns a <see cref="Pickable"/> on the floor
+        /// </summary>
+        /// <param name="data">Datas to drop</param>
         public void Drop(ItemData data)
         {
             if (Remove(data))
@@ -76,6 +122,11 @@ namespace LateUpdate {
             }
         }
 
+        /// <summary>
+        /// Returns true if <paramref name="itemData"/> can be add to inventory
+        /// </summary>
+        /// <param name="itemData">The datas to add</param>
+        /// <returns>True if can add</returns>
         public bool CanAdd(ItemData itemData)
         {
             if (itemData.Inventory == this)
@@ -104,16 +155,25 @@ namespace LateUpdate {
             return true;
         }
 
+        /// <summary>
+        /// Returns the <see cref="Encumbrance"/> on <see cref="Capacity"/> ratio
+        /// </summary>
+        /// <returns></returns>
         public float GetFillPercent()
         {
             return Encumbrance / capacity;
         }
 
+        /// <summary>
+        /// Call this to tell that the <see cref="Inventory"/> has been updated
+        /// </summary>
         public void UpdateInventory()
         {
             onInventoryUpdate.Invoke();
         }
+        #endregion
 
+        #region Private Methods
         void InitializeDatas()
         {
             itemDatas = new List<ItemData>();
@@ -123,18 +183,25 @@ namespace LateUpdate {
                 itemDatas.Add(data);
             }
         }
+        #endregion
 
+        #region Runtime Methods
         private void Awake()
         {
             InitializeDatas();
             UpdateInventory();
         }
+        #endregion
 
+        #region Actions
         public List<GameAction> GetPossibleActions(Actor actor)
         {
             return new List<GameAction> { new Trade_Action(actor, this) };
         }
 
+        /// <summary>
+        /// This action opens the <see cref="GameAction.Target"/> <see cref="Inventory"/>
+        /// </summary>
         public class Trade_Action : GameAction
         {
             Inventory inventory;
@@ -161,5 +228,6 @@ namespace LateUpdate {
                 return Vector3.Distance(Actor.transform.position, Target.gameObject.transform.position) > 5;
             }
         }
+        #endregion
     }
 }

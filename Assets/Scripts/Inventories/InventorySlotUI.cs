@@ -29,6 +29,9 @@ namespace LateUpdate {
 
         #region Events
         public class DragSlotEvent : UnityEvent<ItemData, SlotDragAction> { }
+        /// <summary>
+        /// This Event is Called when the slot is dragged
+        /// </summary>
         public DragSlotEvent onDragSlot = new DragSlotEvent();
         #endregion
 
