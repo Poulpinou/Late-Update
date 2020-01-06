@@ -171,6 +171,11 @@ namespace LateUpdate {
         {
             onInventoryUpdate.Invoke();
         }
+
+        public List<GameAction> GetPossibleActions(Actor actor)
+        {
+            return new List<GameAction> { new Trade_Action(actor, this) };
+        }
         #endregion
 
         #region Private Methods
@@ -190,43 +195,6 @@ namespace LateUpdate {
         {
             InitializeDatas();
             UpdateInventory();
-        }
-        #endregion
-
-        #region Actions
-        public List<GameAction> GetPossibleActions(Actor actor)
-        {
-            return new List<GameAction> { new Trade_Action(actor, this) };
-        }
-
-        /// <summary>
-        /// This action opens the <see cref="GameAction.Target"/> <see cref="Inventory"/>
-        /// </summary>
-        public class Trade_Action : GameAction
-        {
-            Inventory inventory;
-
-            public override string Name => "Trade";
-
-            public Trade_Action(Actor actor, Inventory target) : base(actor, target) {
-                inventory = target;
-            }
-
-            public override void Execute()
-            {
-                UIManager.CreateFloatingPanel<InventoryPanel>(
-                    Camera.main.WorldToScreenPoint(Target.gameObject.transform.position),
-                    i => {
-                        i.LinkInventory(inventory);
-                        i.CloseCondition = IsTooFar;
-                    }
-                );
-            }
-
-            bool IsTooFar()
-            {
-                return Vector3.Distance(Actor.transform.position, Target.gameObject.transform.position) > 5;
-            }
         }
         #endregion
     }

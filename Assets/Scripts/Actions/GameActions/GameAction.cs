@@ -9,6 +9,10 @@ namespace LateUpdate {
     /// </summary>
     public abstract class GameAction
     {
+        public enum ExitStatus { done, stopped, hasNextAction }
+
+        Action<ExitStatus> callback;
+
         #region Public Properties
         /// <summary>
         /// The <see cref="Actor"/> that will perform the action
@@ -34,6 +38,10 @@ namespace LateUpdate {
         /// Returns true if the action is valid
         /// </summary>
         public virtual bool IsValid => CanApplyOnSelf || Target.gameObject != Actor.gameObject;
+        
+        public GameAction NextAction { get; protected set; }
+
+        public bool HasNextAction => NextAction != null;
         #endregion
 
         #region Constructors
@@ -47,6 +55,11 @@ namespace LateUpdate {
             Actor = actor;
             Target = target;
         }
+
+        public GameAction(Actor actor, IInteractable target, GameAction nextAction) : this(actor, target)
+        {
+            NextAction = nextAction;
+        }
         #endregion
 
         #region Public Methods
@@ -55,13 +68,29 @@ namespace LateUpdate {
         /// </summary>
         public void Run()
         {
-            Actor.SetAction(this);
+            Actor.PerformAction(this);
         }
+
+        public virtual IEnumerator Execute(Action<ExitStatus> callback)
+        {
+            this.callback = callback;
+            yield return OnExecute();
+
+            Stop(HasNextAction? ExitStatus.hasNextAction : ExitStatus.done);
+        }
+
+        public virtual void Stop(ExitStatus exitStatus = ExitStatus.stopped)
+        {
+            OnDone(exitStatus);
+            callback.Invoke(exitStatus);
+        }
+
+        protected abstract void OnDone(ExitStatus exitStatus);
 
         /// <summary>
         /// Override this method with your custom action's behaviour
         /// </summary>
-        public abstract void Execute();
+        protected abstract IEnumerator OnExecute();
 
         public override string ToString()
         {

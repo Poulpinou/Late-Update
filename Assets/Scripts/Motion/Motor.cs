@@ -20,7 +20,6 @@ namespace LateUpdate
         #region Private Fields
         Transform target;
         NavMeshAgent agent;
-        Coroutine coroutine;
         #endregion
 
         #region Public Methods
@@ -39,7 +38,7 @@ namespace LateUpdate
         /// <param name="target">The <see cref="IInteractable"/> target to follow</param>
         public void FollowTarget(IInteractable target)
         {
-            coroutine = StartCoroutine(KeepFollowingTarget(target));
+            StartCoroutine(KeepFollowingTarget(target));
         }
 
         /// <summary>
@@ -49,7 +48,7 @@ namespace LateUpdate
         /// <param name="callback">The action to perform when <paramref name="point"/> is reached</param>
         public void GoTo(Vector3 point, Action callback = null)
         {
-            coroutine = StartCoroutine(ReachPoint(point, callback));
+            StartCoroutine(ReachPoint(point, callback));
         }
 
         /// <summary>
@@ -59,7 +58,7 @@ namespace LateUpdate
         /// <param name="callback">The action to perform when <paramref name="target"/> is reached</param>
         public void GoTo(IInteractable target, Action callback = null)
         {
-            coroutine = StartCoroutine(ReachTarget(target, callback));
+            StartCoroutine(ReachTarget(target, callback));
         }
 
         /// <summary>
@@ -67,12 +66,9 @@ namespace LateUpdate
         /// </summary>
         public void Clear()
         {
-            if (coroutine != null)
-            {
-                StopCoroutine(coroutine);
-                coroutine = null;
-            }
+            StopAllCoroutines();
 
+            agent.SetDestination(transform.position);
             agent.stoppingDistance = 0;
             target = null;
         }
@@ -107,7 +103,7 @@ namespace LateUpdate
         #endregion
 
         #region Coroutines
-        IEnumerator ReachTarget(IInteractable newTarget, Action callback = null)
+        public IEnumerator ReachTarget(IInteractable newTarget, Action callback = null)
         {
             Clear();
 
@@ -130,7 +126,7 @@ namespace LateUpdate
                 callback.Invoke();
         }
 
-        IEnumerator ReachPoint(Vector3 point, Action callback = null)
+        public IEnumerator ReachPoint(Vector3 point, Action callback = null)
         {
             Clear();
             agent.SetDestination(point);
@@ -141,7 +137,7 @@ namespace LateUpdate
                 callback.Invoke();
         }
 
-        IEnumerator KeepFollowingTarget(IInteractable newTarget)
+        public IEnumerator KeepFollowingTarget(IInteractable newTarget)
         {
             Clear();
 
@@ -153,7 +149,6 @@ namespace LateUpdate
             while (target != null)
             {
                 agent.SetDestination(target.position);
-
                 yield return null;
             }
         }

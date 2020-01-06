@@ -33,7 +33,8 @@ namespace LateUpdate
             }
             else
             {
-                Character.Motor.GoTo(hit.point);
+                Character.Motor.MoveToPoint(hit.point);
+                //Character.PerformAction(new MoveToPoint_Action(Character, hit.point));
             }
         }
 

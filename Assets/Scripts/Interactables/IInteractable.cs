@@ -32,6 +32,11 @@ namespace LateUpdate {
                 area.ComputeRadiusFromCollider(collider, 1);
 
             return area;
-        } 
+        }
+
+        public static bool CanInteract(this IInteractable interactable, Actor actor)
+        {
+            return interactable.GetInteractionArea().PointIsInArea(actor.transform.position);
+        }
     }
 }

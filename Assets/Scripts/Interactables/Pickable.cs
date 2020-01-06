@@ -40,29 +40,5 @@ namespace LateUpdate {
             name = "Pickable_" + itemData.Item.itemName;
         }
         #endregion
-
-        #region Interactions
-        public class PickUp_Action : GameAction
-        {
-            readonly Inventory _inventory;
-            readonly Pickable _pickable;
-
-            public override string Name => "Pick up";
-
-            public PickUp_Action(Actor actor, Pickable pickable, Inventory inventory) : base(actor, pickable)
-            {
-                _inventory = inventory;
-                _pickable = pickable;
-            }
-
-            public override void Execute()
-            {
-                if (_inventory.Add(_pickable.ItemData))
-                {
-                    Destroy(_pickable.gameObject);
-                }
-            }
-        }
-        #endregion
     }
 }

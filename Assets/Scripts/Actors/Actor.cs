@@ -36,20 +36,32 @@ namespace LateUpdate {
         /// Tells to the <see cref="Actor"/> which <see cref="GameAction"/> it should perform (it will cancel the previous one if any)
         /// </summary>
         /// <param name="action">The <see cref="GameAction"/> to perform</param>
-        public void SetAction(GameAction action)
+        public void PerformAction(GameAction action)
         {
             StopAction();
 
-            CurrentAction = action;
-
-            if (CurrentAction.NeedsContact == true)
+            if (action.NeedsContact == true && !action.Target.CanInteract(this))
             {
-                Motor.GoTo(CurrentAction.Target, CurrentAction.Execute);
+                CurrentAction = new MoveTo_Action(
+                    this,
+                    action.Target, 
+                    action
+                );
             }
             else
             {
-                CurrentAction.Execute();
+                CurrentAction = action;
             }
+
+            StartCoroutine(CurrentAction.Execute(OnCurrentActionDone));
+        }
+
+        void OnCurrentActionDone(GameAction.ExitStatus exitStatus)
+        {
+            if (exitStatus == GameAction.ExitStatus.hasNextAction)
+                PerformAction(CurrentAction.NextAction);
+            else
+                CurrentAction = null;
         }
 
         /// <summary>
@@ -60,6 +72,7 @@ namespace LateUpdate {
             if (CurrentAction == null) return;
 
             StopAllCoroutines();
+            CurrentAction.Stop();
             CurrentAction = null;
         }
         #endregion
