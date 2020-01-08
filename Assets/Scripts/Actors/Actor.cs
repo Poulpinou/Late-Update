@@ -29,6 +29,7 @@ namespace LateUpdate {
         public GameAction CurrentAction { get; protected set; }
         public string TooltipText => infos.name;
         public int Priority => -1;
+        public StatContainer Stats { get; protected set; }
         #endregion
 
         #region Public Methods
@@ -81,6 +82,8 @@ namespace LateUpdate {
         protected virtual void Awake()
         {
             Motor = GetComponent<Motor>();
+            Stats = GetComponent<StatContainer>();
+            Stats.InitStats();
         }
         #endregion
 

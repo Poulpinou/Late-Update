@@ -11,7 +11,8 @@ namespace LateUpdate {
     {
         public enum ExitStatus { done, stopped, hasNextAction }
 
-        Action<ExitStatus> callback;
+        protected Action<ExitStatus> callback;
+        protected List<Trainer> trainers;
 
         #region Public Properties
         /// <summary>
@@ -74,8 +75,30 @@ namespace LateUpdate {
         public virtual IEnumerator Execute(Action<ExitStatus> callback)
         {
             this.callback = callback;
-            yield return OnExecute();
 
+            StatContainer statContainer = Actor.GetComponent<StatContainer>();
+            if(statContainer.Trainable)
+                InitTrainers();
+
+            if(trainers != null && trainers.Count > 0)
+            {
+                IEnumerator coroutine = OnExecute();
+                while (coroutine.MoveNext())
+                {
+                    Debug.Log(Name + " : Passe");
+                    for (int i = 0; i < trainers.Count; i++)
+                    {
+                        trainers[i].Update();
+                    }
+                    yield return null;
+                }
+            }
+            else
+            {
+                yield return OnExecute();
+            }
+
+            Debug.Log(Name + " : Exit");
             Stop(HasNextAction? ExitStatus.hasNextAction : ExitStatus.done);
         }
 
@@ -85,10 +108,14 @@ namespace LateUpdate {
             callback.Invoke(exitStatus);
         }
 
-        protected abstract void OnDone(ExitStatus exitStatus);
+        protected virtual void InitTrainers() {
+            trainers = new List<Trainer>();
+        }
+
+        protected virtual void OnDone(ExitStatus exitStatus) { }
 
         /// <summary>
-        /// Override this method with your custom action's behaviour
+        /// Override this method with your custom action behaviour
         /// </summary>
         protected abstract IEnumerator OnExecute();
 
@@ -97,5 +124,31 @@ namespace LateUpdate {
             return string.Format("{0} ({1} => {2})", Name, Actor.gameObject.name, Target.gameObject.name);
         }
         #endregion
+
+        protected class Trainer
+        {
+            TrainableStat stat;
+            float frequency;
+            float progress;
+            int expAmount;
+
+            public Trainer(TrainableStat stat, float frequency, int expAmount = 1)
+            {
+                this.stat = stat;
+                this.frequency = frequency;
+                this.expAmount = expAmount;
+            }
+
+            public void Update()
+            {
+                progress += Time.deltaTime;
+
+                if(progress >= frequency)
+                {
+                    progress -= frequency;
+                    stat.AddExp(1);
+                }
+            }
+        }
     }
 }

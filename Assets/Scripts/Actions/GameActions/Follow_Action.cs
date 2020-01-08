@@ -19,12 +19,17 @@ namespace LateUpdate {
                 Debug.Log(string.Format("{0} can't move", Actor.Infos.name));
             }
 
-            yield return Actor.Motor.KeepFollowingTarget(Target);
+            IEnumerator coroutine = Actor.Motor.KeepFollowingTarget(Target);
+            while (coroutine.MoveNext())
+                yield return null;
         }
 
-        protected override void OnDone(ExitStatus exitStatus)
+        protected override void InitTrainers()
         {
-            
+            base.InitTrainers();
+            StatContainer statContainer = Actor.GetComponent<StatContainer>();
+
+            trainers.Add(new Trainer(statContainer.GetStat<Athletic_Stat>(), 1));
         }
     }
 }

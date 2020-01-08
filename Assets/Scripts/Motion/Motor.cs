@@ -13,13 +13,14 @@ namespace LateUpdate
     public class Motor : MonoBehaviour
     {
         #region Serialized Fields
+        [SerializeField] NavMeshAgent agent;
         [SerializeField] float destinationThreshold = 0.001f;
         [SerializeField] float followDistance = 1f;
         #endregion
 
-        #region Private Fields
-        Transform target;
-        NavMeshAgent agent;
+        #region Public Properties
+        public Transform Target { get; private set; }
+        public NavMeshAgent Agent => agent;
         #endregion
 
         #region Public Methods
@@ -29,7 +30,7 @@ namespace LateUpdate
         /// <param name="point">The destination</param>
         public void MoveToPoint(Vector3 point)
         {
-            agent.SetDestination(point);
+            Agent.SetDestination(point);
         }
 
         /// <summary>
@@ -68,9 +69,9 @@ namespace LateUpdate
         {
             StopAllCoroutines();
 
-            agent.SetDestination(transform.position);
-            agent.stoppingDistance = 0;
-            target = null;
+            Agent.SetDestination(transform.position);
+            Agent.stoppingDistance = 0;
+            Target = null;
         }
 
         /// <summary>
@@ -85,16 +86,16 @@ namespace LateUpdate
         #region Private Methods
         void FaceTarget()
         {
-            Vector3 direction = (target.position - transform.position).normalized;
+            Vector3 direction = (Target.position - transform.position).normalized;
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
         }
 
         protected bool PathComplete()
         {
-            if (!agent.pathPending && agent.remainingDistance <= destinationThreshold + agent.stoppingDistance)
+            if (!Agent.pathPending && Agent.remainingDistance <= destinationThreshold + Agent.stoppingDistance)
             {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+                if (!Agent.hasPath || Agent.velocity.sqrMagnitude == 0f)
                     return true;
             }
 
@@ -109,13 +110,13 @@ namespace LateUpdate
 
             InteractionArea area = newTarget.GetInteractionArea();
 
-            agent.stoppingDistance = area.radius;
-            target = area.point;
-            agent.SetDestination(target.position);
+            Agent.stoppingDistance = area.radius;
+            Target = area.point;
+            Agent.SetDestination(Target.position);
 
             while (!PathComplete())
             {
-                agent.SetDestination(target.position);
+                Agent.SetDestination(Target.position);
 
                 yield return null;
             }
@@ -129,7 +130,7 @@ namespace LateUpdate
         public IEnumerator ReachPoint(Vector3 point, Action callback = null)
         {
             Clear();
-            agent.SetDestination(point);
+            Agent.SetDestination(point);
 
             yield return new WaitUntil(PathComplete);
 
@@ -143,21 +144,23 @@ namespace LateUpdate
 
             InteractionArea area = newTarget.GetInteractionArea();
 
-            agent.stoppingDistance = area.radius + followDistance;
-            target = area.point;
+            Agent.stoppingDistance = area.radius + followDistance;
+            Target = area.point;
 
-            while (target != null)
+            while (Target != null)
             {
-                agent.SetDestination(target.position);
+                Debug.Log("Follow...");
+                Agent.SetDestination(Target.position);
                 yield return null;
             }
         }
         #endregion
 
-        #region Runtime Methods
-        private void Start()
+        #region Editor Methods
+        private void OnValidate()
         {
-            agent = GetComponent<NavMeshAgent>();
+            if (agent == null)
+                agent = GetComponent<NavMeshAgent>();
         }
         #endregion       
     }

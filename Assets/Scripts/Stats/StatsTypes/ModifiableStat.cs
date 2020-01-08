@@ -1,36 +1,27 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System;
 using System.Collections.ObjectModel;
+using System;
+using UnityEngine.Events;
 
-namespace LateUpdate {
-    public abstract class Stat
-    {
-        public abstract string Name { get; }
-        public abstract string ShortName { get; }
-
-        public abstract int Value { get; }
-
-        public override string ToString()
-        {
-            return Name + " : " + Value;
-        }
-    }
-
+namespace LateUpdate
+{
     public abstract class ModifiableStat : Stat
     {
         [Header("Base Values")]
-        [SerializeField] protected int baseValue;
+        [SerializeField] protected float baseValue;
 
         private readonly List<StatModifier> statModifiers;
         public readonly ReadOnlyCollection<StatModifier> StatModifiers;
         private bool isDirty = true;
         private float _value;
         private float lastBaseValue = float.MinValue;
-        
-        public int BaseValue => Mathf.FloorToInt(baseValue);
-        public override int Value
+
+        public class StatChangedEvent : UnityEvent<ModifiableStat> { }
+        public StatChangedEvent onStatChanged = new StatChangedEvent();
+
+        public float BaseValue => baseValue;
+        public override float Value
         {
             get
             {
@@ -38,9 +29,10 @@ namespace LateUpdate {
                 {
                     lastBaseValue = BaseValue;
                     _value = CalculateFinalValue();
+                    onStatChanged.Invoke(this);
                     isDirty = false;
                 }
-                return Mathf.FloorToInt(_value);
+                return _value;
             }
         }
 
@@ -50,7 +42,7 @@ namespace LateUpdate {
             StatModifiers = statModifiers.AsReadOnly();
         }
 
-        public ModifiableStat(int baseValue) : this()
+        public ModifiableStat(float baseValue) : this()
         {
             this.baseValue = baseValue;
         }
@@ -102,7 +94,7 @@ namespace LateUpdate {
             return 0;
         }
 
-        private float CalculateFinalValue()
+        protected virtual float CalculateFinalValue()
         {
             float finalValue = BaseValue;
             float sumPercentAdd = 0;
@@ -134,67 +126,4 @@ namespace LateUpdate {
             return (float)Math.Round(finalValue, 4);
         }
     }
-
-    public abstract class TrainableStat : ModifiableStat
-    {
-        [SerializeField] [Range(0.1f, 2f)] float expRate = 1;
-
-        int currentExp = 0;
-
-        public virtual int MaxValue => 100;
-        public virtual int MinValue => 1;
-        public int CurrentExp => currentExp;
-        public int ExpToNext => Mathf.RoundToInt(expRate * Mathf.Pow(BaseValue, 3) + 10);
-        public float ExpRatio => (float)CurrentExp / ExpToNext;
-
-        public void AddExp(int amount)
-        {
-            currentExp += amount;
-            while(currentExp >= ExpToNext)
-            {
-                currentExp -= ExpToNext;
-                baseValue++;
-            }
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0} : {1} (+{2}) | exp : {3}/{4}xp", Name, Value, Value - BaseValue, CurrentExp, ExpToNext);
-        }
-    }
-
-    public abstract class LinkedStat : Stat
-    {
-         
-    }
-
-    [Serializable]
-    public class Strength_Stat : TrainableStat
-    {
-        public override string Name => "Strength";
-        public override string ShortName => "STR";
-    }
-
-    [Serializable]
-    public class Constitution_Stat : TrainableStat
-    {
-        public override string Name => "Constitution";
-        public override string ShortName => "CON";
-    }
-
-    public class Life_Stat : LinkedStat
-    {
-        Constitution_Stat constitution;
-
-        public override string Name => "Life";
-        public override string ShortName => "HP";
-
-        public Life_Stat(Constitution_Stat constitution)
-        {
-            this.constitution = constitution;
-        }
-
-        public override int Value => constitution.Value * 10;
-    }
-
 }

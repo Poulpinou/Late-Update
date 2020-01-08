@@ -2,19 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Reflection;
+using System.Linq;
+using UnityEngine.Events;
 
 namespace LateUpdate {
-    public abstract class StatContainer
+    public abstract class StatContainer : MonoBehaviour
     {
-        [SerializeField] bool train = true;
+        [SerializeField] bool trainable = true;
 
         public Stat[] All { get; protected set; }
+        public bool Trainable => trainable;
 
         public virtual void InitStats()
         {
             InitArrays();
             InitLinkedStats();
         }
+
+        public TStat GetStat<TStat>(string name = null) where TStat : Stat
+        {
+            return All.Where(s => s is TStat &&(string.IsNullOrEmpty(name) || s.Name == name)).FirstOrDefault() as TStat;
+        }
+
+        public TStat[] GetStats<TStat>() where TStat : Stat
+        {
+            return All.Where(s => s is TStat).Cast<TStat>().ToArray();
+        } 
 
         protected virtual Stat[] InitArrays()
         {
@@ -33,12 +46,5 @@ namespace LateUpdate {
         }
 
         protected abstract void InitLinkedStats();
-
-        void Train(object value)
-        {
-            int val = (int)value;
-            //stats.constitution.AddExp(1);
-            //Debug.Log(stats.constitution);
-        }
     }
 }

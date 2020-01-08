@@ -27,5 +27,13 @@ namespace LateUpdate {
         {
             Actor.Motor.Clear();
         }
+
+        protected override void InitTrainers()
+        {
+            base.InitTrainers();
+            StatContainer statContainer = Actor.GetComponent<StatContainer>();
+
+            trainers.Add(new Trainer(statContainer.GetStat<Athletic_Stat>(), 1));
+        }
     }
 }

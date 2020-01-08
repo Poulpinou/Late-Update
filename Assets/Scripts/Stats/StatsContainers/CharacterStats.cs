@@ -8,15 +8,17 @@ namespace LateUpdate {
     [Serializable]
     public class CharacterStats : StatContainer
     {
-        public Life_Stat life;
-        public Strength_Stat strength;
-        public Constitution_Stat constitution;
+        //Base Stats
+        public Athletic_Stat Athletic;
+
+        //Linked Stats
+        public RunSpeed_Stat RunSpeed { get; protected set; }
 
         public TrainableStat[] AllTrainables { get; protected set; }
 
         protected override void InitLinkedStats()
         {
-            life = new Life_Stat(constitution);
+            RunSpeed = new RunSpeed_Stat(Athletic);
         }
 
         protected override Stat[] InitArrays()
