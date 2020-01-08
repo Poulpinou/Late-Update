@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using LateUpdate.Stats;
 
-namespace LateUpdate {
+namespace LateUpdate.Actions {
     /// <summary>
     /// This is the base class for every <see cref="GameAction"/>
     /// </summary>

@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System;
 using UnityEngine.Events;
 
-namespace LateUpdate
+namespace LateUpdate.Stats
 {
     public abstract class ModifiableStat : Stat
     {

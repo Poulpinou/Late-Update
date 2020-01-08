@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LateUpdate {
+namespace LateUpdate.Stats {
     [Serializable]
     public class Athletic_Stat : TrainableStat
     {

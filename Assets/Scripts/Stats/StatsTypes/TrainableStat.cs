@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace LateUpdate {
+namespace LateUpdate .Stats{
     public abstract class TrainableStat : ModifiableStat
     {
         [SerializeField] [Range(0.1f, 2f)] float expRate = 1;

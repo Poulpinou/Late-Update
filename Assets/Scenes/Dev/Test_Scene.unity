@@ -2042,6 +2042,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   locomotionAnimationSmoothTime: 0.1
+  minRunSpeed: 0
 --- !u!114 &2058927539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2357,6 +2358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   locomotionAnimationSmoothTime: 0.1
+  minRunSpeed: 5
 --- !u!114 &3344151864833139559
 MonoBehaviour:
   m_ObjectHideFlags: 0

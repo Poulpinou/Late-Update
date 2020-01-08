@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LateUpdate {
+namespace LateUpdate.Stats {
     public enum StatModType
     {
         Flat = 100,

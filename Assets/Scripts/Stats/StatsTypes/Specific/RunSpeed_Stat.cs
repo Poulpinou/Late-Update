@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LateUpdate {
+namespace LateUpdate.Stats {
     public class RunSpeed_Stat : LinkedStat
     {
         public const float MIN_VALUE = 3f;

@@ -1,4 +1,4 @@
-﻿namespace LateUpdate {
+﻿namespace LateUpdate.Stats {
     public abstract class LinkedStat : ModifiableStat
     {
         public override float Value => ComputeLinkedValue();

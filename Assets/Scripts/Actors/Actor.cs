@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using LateUpdate.Stats;
+using LateUpdate.Actions;
 
 namespace LateUpdate {
     public class Actor : MonoBehaviour, ITooltipable

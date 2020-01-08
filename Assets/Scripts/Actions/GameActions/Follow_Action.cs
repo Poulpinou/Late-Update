@@ -1,8 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using LateUpdate.Stats;
 
-namespace LateUpdate {
+namespace LateUpdate.Actions {
     public class Follow_Action : GameAction
     {
         public override string Name => "Follow";

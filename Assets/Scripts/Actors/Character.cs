@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using LateUpdate.Stats;
+using LateUpdate.Actions;
 
 namespace LateUpdate {
     public class Character : Actor, IInteractable

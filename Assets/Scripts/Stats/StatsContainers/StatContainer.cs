@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Reflection;
 using System.Linq;
-using UnityEngine.Events;
 
-namespace LateUpdate {
+namespace LateUpdate.Stats {
     public abstract class StatContainer : MonoBehaviour
     {
         [SerializeField] bool trainable = true;

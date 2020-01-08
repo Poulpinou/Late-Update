@@ -1,8 +1,7 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace LateUpdate {
+namespace LateUpdate.Actions {
     /// <summary>
     /// This action opens the <see cref="GameAction.Target"/> <see cref="Inventory"/>
     /// </summary>

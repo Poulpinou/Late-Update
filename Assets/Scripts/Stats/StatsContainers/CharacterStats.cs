@@ -1,10 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
 using System.Linq;
 
-namespace LateUpdate {
+namespace LateUpdate.Stats {
     [Serializable]
     public class CharacterStats : StatContainer
     {

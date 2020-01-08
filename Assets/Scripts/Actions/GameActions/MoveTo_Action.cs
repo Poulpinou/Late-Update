@@ -1,9 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System;
+using LateUpdate.Stats;
 
-namespace LateUpdate {
+namespace LateUpdate.Actions {
     public class MoveTo_Action : GameAction
     {
         public override string Name => "Move to";
