@@ -10,10 +10,14 @@ namespace LateUpdate.Actions {
     /// </summary>
     public abstract class GameAction
     {
+        #region Enums
         public enum ExitStatus { done, stopped, hasNextAction }
+        #endregion
 
+        #region Private Fields
         protected Action<ExitStatus> callback;
         protected List<Trainer> trainers;
+        #endregion
 
         #region Public Properties
         /// <summary>
@@ -73,6 +77,10 @@ namespace LateUpdate.Actions {
             Actor.PerformAction(this);
         }
 
+        /// <summary>
+        /// Executes this action and invoke <paramref name="callback"/> when it's done
+        /// </summary>
+        /// <param name="callback">Action to do when action is done</param>
         public virtual IEnumerator Execute(Action<ExitStatus> callback)
         {
             this.callback = callback;
@@ -86,7 +94,6 @@ namespace LateUpdate.Actions {
                 IEnumerator coroutine = OnExecute();
                 while (coroutine.MoveNext())
                 {
-                    Debug.Log(Name + " : Passe");
                     for (int i = 0; i < trainers.Count; i++)
                     {
                         trainers[i].Update();
@@ -98,27 +105,18 @@ namespace LateUpdate.Actions {
             {
                 yield return OnExecute();
             }
-
-            Debug.Log(Name + " : Exit");
             Stop(HasNextAction? ExitStatus.hasNextAction : ExitStatus.done);
         }
 
+        /// <summary>
+        /// Stops the action and invoke its callback
+        /// </summary>
+        /// <param name="exitStatus">The <see cref="ExitStatus"/> to send</param>
         public virtual void Stop(ExitStatus exitStatus = ExitStatus.stopped)
         {
             OnDone(exitStatus);
             callback.Invoke(exitStatus);
         }
-
-        protected virtual void InitTrainers() {
-            trainers = new List<Trainer>();
-        }
-
-        protected virtual void OnDone(ExitStatus exitStatus) { }
-
-        /// <summary>
-        /// Override this method with your custom action behaviour
-        /// </summary>
-        protected abstract IEnumerator OnExecute();
 
         public override string ToString()
         {
@@ -126,30 +124,20 @@ namespace LateUpdate.Actions {
         }
         #endregion
 
-        protected class Trainer
-        {
-            TrainableStat stat;
-            float frequency;
-            float progress;
-            int expAmount;
-
-            public Trainer(TrainableStat stat, float frequency, int expAmount = 1)
-            {
-                this.stat = stat;
-                this.frequency = frequency;
-                this.expAmount = expAmount;
-            }
-
-            public void Update()
-            {
-                progress += Time.deltaTime;
-
-                if(progress >= frequency)
-                {
-                    progress -= frequency;
-                    stat.AddExp(1);
-                }
-            }
+        #region Private Methods
+        protected virtual void InitTrainers() {
+            trainers = new List<Trainer>();
         }
+
+        /// <summary>
+        /// Override this method if your custom action should do something when it's done
+        /// </summary>
+        protected virtual void OnDone(ExitStatus exitStatus) { }
+
+        /// <summary>
+        /// Override this method with your custom action behaviour
+        /// </summary>
+        protected abstract IEnumerator OnExecute();
+        #endregion
     }
 }

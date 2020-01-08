@@ -29,8 +29,17 @@ namespace LateUpdate {
         /// The <see cref="GameAction"/> currently performed by this <see cref="Actor"/>
         /// </summary>
         public GameAction CurrentAction { get; protected set; }
+        /// <summary>
+        /// Returns the content of the tooltip for this object
+        /// </summary>
         public string TooltipText => infos.name;
+        /// <summary>
+        /// Returns the priority in the tooltip
+        /// </summary>
         public int Priority => -1;
+        /// <summary>
+        /// The <see cref="StatContainer"/> attached to this <see cref="GameObject"/>
+        /// </summary>
         public StatContainer Stats { get; protected set; }
         #endregion
 
@@ -59,14 +68,6 @@ namespace LateUpdate {
             StartCoroutine(CurrentAction.Execute(OnCurrentActionDone));
         }
 
-        void OnCurrentActionDone(GameAction.ExitStatus exitStatus)
-        {
-            if (exitStatus == GameAction.ExitStatus.hasNextAction)
-                PerformAction(CurrentAction.NextAction);
-            else
-                CurrentAction = null;
-        }
-
         /// <summary>
         /// Stops the <see cref="CurrentAction"/>
         /// </summary>
@@ -77,6 +78,16 @@ namespace LateUpdate {
             StopAllCoroutines();
             CurrentAction.Stop();
             CurrentAction = null;
+        }
+        #endregion
+
+        #region Private Methods
+        void OnCurrentActionDone(GameAction.ExitStatus exitStatus)
+        {
+            if (exitStatus == GameAction.ExitStatus.hasNextAction)
+                PerformAction(CurrentAction.NextAction);
+            else
+                CurrentAction = null;
         }
         #endregion
 
