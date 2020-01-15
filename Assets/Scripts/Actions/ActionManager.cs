@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using System;
 
-namespace LateUpdate {
+namespace LateUpdate.Actions {
     /// <summary>
     /// This Manager helps you to configure actions and call them staticaly
     /// </summary>

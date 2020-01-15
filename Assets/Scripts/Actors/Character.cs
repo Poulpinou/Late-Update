@@ -1,29 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using LateUpdate.Stats;
+using LateUpdate.Actions;
 
 namespace LateUpdate {
     public class Character : Actor, IInteractable
-    { 
+    {
+        public new CharacterStats Stats => base.Stats as CharacterStats;
+
         public virtual List<GameAction> GetPossibleActions(Actor actor)
         {
             return new List<GameAction> { new Follow_Action(actor, this) };
         }
 
-        #region Game Actions
-        public class Follow_Action : GameAction
+        protected override void Awake()
         {
-            public override string Name => "Follow";
+            base.Awake();
 
-            public override bool NeedsContact => false;
-
-            public Follow_Action(Actor actor, IInteractable interactable) : base(actor, interactable) { }
-
-            public override void Execute()
-            {
-                Actor.Motor.FollowTarget(Target);
-            }
+            Motor.Agent.speed = Stats.RunSpeed.Value;
+            Stats.RunSpeed.onStatChanged.AddListener(OnRunSpeedValueChanged);
         }
-        #endregion
+
+        void OnRunSpeedValueChanged(ModifiableStat stat)
+        {
+            Motor.Agent.speed = stat.Value;
+        }
     }
 }
