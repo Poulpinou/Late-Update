@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using LateUpdate.Actions;
 
 namespace LateUpdate {
     public class InventoryHUD : InventoryPanel

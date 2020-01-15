@@ -60,5 +60,10 @@ namespace LateUpdate {
             Vector3 extents = collider.bounds.extents;
             radius = Mathf.Max(extents.x, extents.y, extents.z) + offset;
         }
+
+        public bool PointIsInArea(Vector3 point)
+        {
+            return Vector3.Distance(point, this.point.transform.position) <= radius;
+        }
     }
 }

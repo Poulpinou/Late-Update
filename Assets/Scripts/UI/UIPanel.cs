@@ -11,8 +11,9 @@ namespace LateUpdate {
         public virtual Func<bool> CloseCondition { get; set; } = null;
         public virtual bool DestroyIfControlChanged => true;
         public virtual string PanelName { get; protected set; }
+        public virtual bool IsUnique => true;
 
-        public void Close()
+        public virtual void Close()
         {
             if (FloatingWindow != null)
                 Destroy(FloatingWindow.gameObject);
@@ -20,22 +21,22 @@ namespace LateUpdate {
                 Destroy(gameObject);
         }
 
-        void OnControlChanged(Controller controller)
+        protected virtual void OnControlChanged(Controller controller)
         {
-            Close();
+            if (DestroyIfControlChanged)
+                Close();
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             RectTransform = GetComponent<RectTransform>();
 
-            if (DestroyIfControlChanged)
-                InputManager.Active.onCurrentControllerChanged.AddListener(OnControlChanged);
+            InputManager.Active.onCurrentControllerChanged.AddListener(OnControlChanged);
 
             PanelName = name;
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             if (CloseCondition != null && CloseCondition.Invoke())
                 Close();

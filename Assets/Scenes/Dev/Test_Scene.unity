@@ -1682,11 +1682,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
+  defaultFloatingWindowPosition: {x: 300, y: 150}
   panelsRoot: {fileID: 1718295592}
   floatingWindowModel: {fileID: 5748592366979156930, guid: 9287ce06349ae0649a8fc632aafd0e04,
     type: 3}
   panelModels:
   - {fileID: 1310323876736360244, guid: 840dc11a0bf72f645aca47cbcedd4945, type: 3}
+  - {fileID: 4462183526151962096, guid: 540a88a1425e0be41877bb793d533be3, type: 3}
 --- !u!1 &1560076987
 GameObject:
   m_ObjectHideFlags: 0
@@ -1946,6 +1948,7 @@ GameObject:
   - component: {fileID: 2058927534}
   - component: {fileID: 2058927542}
   - component: {fileID: 2058927541}
+  - component: {fileID: 2058927544}
   - component: {fileID: 2058927540}
   - component: {fileID: 2058927539}
   - component: {fileID: 2058927538}
@@ -2053,6 +2056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98fc79a1e7c01074dab63142eed31f95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agent: {fileID: 2058927537}
   destinationThreshold: 0.1
   followDistance: 2
 --- !u!114 &2058927540
@@ -2114,6 +2118,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkDisable: 0
+--- !u!114 &2058927544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2058927533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5185e8062d177d48844ed6d89e5585c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trainable: 1
+  onUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  Athletic:
+    baseValue: 0
+    expRate: 1
 --- !u!1 &2095383876
 GameObject:
   m_ObjectHideFlags: 0
@@ -2351,6 +2374,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98fc79a1e7c01074dab63142eed31f95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agent: {fileID: 3344151864833139562}
   destinationThreshold: 0.1
   followDistance: 2
 --- !u!114 &3344151864833139560
@@ -2444,9 +2468,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3344151864833139561}
   - component: {fileID: 3344151864833139568}
+  - component: {fileID: 3344151864833139569}
   - component: {fileID: 3344151864833139566}
-  - component: {fileID: 3344151864833139560}
   - component: {fileID: 3344151864833139559}
+  - component: {fileID: 3344151864833139560}
   - component: {fileID: 3344151864833139558}
   - component: {fileID: 3344151864833139567}
   - component: {fileID: 3344151864833139562}
@@ -2511,6 +2536,25 @@ MonoBehaviour:
     - Bloup bloup bloup...
     - "C'est quoi \xE7a? \nUn Michel bien s\xFBr!"
   faceCamera: {fileID: 1650182068}
+--- !u!114 &3344151864833139569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3344151864833139565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5185e8062d177d48844ed6d89e5585c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trainable: 1
+  onUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  Athletic:
+    baseValue: 5
+    expRate: 1
 --- !u!1001 &6024532745608269716
 PrefabInstance:
   m_ObjectHideFlags: 0

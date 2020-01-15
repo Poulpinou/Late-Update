@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using LateUpdate.Actions;
 
 namespace LateUpdate {
     /// <summary>
@@ -32,6 +32,11 @@ namespace LateUpdate {
                 area.ComputeRadiusFromCollider(collider, 1);
 
             return area;
-        } 
+        }
+
+        public static bool CanInteract(this IInteractable interactable, Actor actor)
+        {
+            return interactable.GetInteractionArea().PointIsInArea(actor.transform.position);
+        }
     }
 }

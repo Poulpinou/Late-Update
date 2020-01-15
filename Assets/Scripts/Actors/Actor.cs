@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using LateUpdate.Stats;
+using LateUpdate.Actions;
 
 namespace LateUpdate {
     public class Actor : MonoBehaviour, ITooltipable
@@ -27,8 +29,18 @@ namespace LateUpdate {
         /// The <see cref="GameAction"/> currently performed by this <see cref="Actor"/>
         /// </summary>
         public GameAction CurrentAction { get; protected set; }
+        /// <summary>
+        /// Returns the content of the tooltip for this object
+        /// </summary>
         public string TooltipText => infos.name;
+        /// <summary>
+        /// Returns the priority in the tooltip
+        /// </summary>
         public int Priority => -1;
+        /// <summary>
+        /// The <see cref="StatContainer"/> attached to this <see cref="GameObject"/>
+        /// </summary>
+        public StatContainer Stats { get; protected set; }
         #endregion
 
         #region Public Methods
@@ -36,20 +48,24 @@ namespace LateUpdate {
         /// Tells to the <see cref="Actor"/> which <see cref="GameAction"/> it should perform (it will cancel the previous one if any)
         /// </summary>
         /// <param name="action">The <see cref="GameAction"/> to perform</param>
-        public void SetAction(GameAction action)
+        public void PerformAction(GameAction action)
         {
             StopAction();
 
-            CurrentAction = action;
-
-            if (CurrentAction.NeedsContact == true)
+            if (action.NeedsContact == true && !action.Target.CanInteract(this))
             {
-                Motor.GoTo(CurrentAction.Target, CurrentAction.Execute);
+                CurrentAction = new MoveTo_Action(
+                    this,
+                    action.Target, 
+                    action
+                );
             }
             else
             {
-                CurrentAction.Execute();
+                CurrentAction = action;
             }
+
+            StartCoroutine(CurrentAction.Execute(OnCurrentActionDone));
         }
 
         /// <summary>
@@ -60,7 +76,18 @@ namespace LateUpdate {
             if (CurrentAction == null) return;
 
             StopAllCoroutines();
+            CurrentAction.Stop();
             CurrentAction = null;
+        }
+        #endregion
+
+        #region Private Methods
+        void OnCurrentActionDone(GameAction.ExitStatus exitStatus)
+        {
+            if (exitStatus == GameAction.ExitStatus.hasNextAction)
+                PerformAction(CurrentAction.NextAction);
+            else
+                CurrentAction = null;
         }
         #endregion
 
@@ -68,6 +95,8 @@ namespace LateUpdate {
         protected virtual void Awake()
         {
             Motor = GetComponent<Motor>();
+            Stats = GetComponent<StatContainer>();
+            Stats.InitStats();
         }
         #endregion
 
