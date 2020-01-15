@@ -31,7 +31,7 @@ MonoBehaviour:
     overrideState: 1
     value: 1
   scale:
-    overrideState: 1
+    overrideState: 0
     value: 2
   color:
     overrideState: 1
