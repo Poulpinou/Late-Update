@@ -8,7 +8,7 @@
         /// <summary>
         /// The final value with modifications
         /// </summary>
-        public override float Value => ComputeLinkedValue();
+        public override float BaseValue => ComputeLinkedValue();
         /// <summary>
         /// An Array that contains every <see cref="Stat"/> linked to this one
         /// </summary>

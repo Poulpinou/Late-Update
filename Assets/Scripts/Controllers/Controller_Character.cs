@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using LateUpdate.Actions;
+using LateUpdate.Stats;
+using LateUpdate.Stats.UI;
 
 namespace LateUpdate
 {
@@ -49,6 +51,27 @@ namespace LateUpdate
         protected virtual void Awake()
         {
             Character = GetComponent<Character>();
+        }
+
+        protected virtual void Update()
+        {
+            if (IsControlled)
+            {
+                if (Input.GetKeyDown(KeyCode.S))
+                {
+                    UIManager.CreateFloatingPanel<StatPanel>(
+                        UIManager.DefaultFloatingWindowPosition,
+                        p => {
+                            p.LinkContainer(GetComponent<StatContainer>());
+                        }
+                    );
+                }
+
+                if (Input.GetKeyDown(KeyCode.M))
+                {
+                    Character.Stats.Athletic.AddModifier(new StatModifier(3, StatModifier.ModType.Flat, this));
+                }
+            }
         }
         #endregion
     }

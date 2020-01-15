@@ -10,7 +10,7 @@ namespace LateUpdate.Stats {
         public Athletic_Stat Athletic;
 
         //Linked Stats
-        public RunSpeed_Stat RunSpeed { get; protected set; }
+        [NonSerialized] public RunSpeed_Stat RunSpeed;
 
         public TrainableStat[] AllTrainables { get; protected set; }
 

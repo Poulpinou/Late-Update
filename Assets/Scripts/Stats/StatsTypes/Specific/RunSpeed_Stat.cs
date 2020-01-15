@@ -12,6 +12,8 @@ namespace LateUpdate.Stats {
 
         public override string ShortName => "rspd";
 
+        public override StatCategory Category => StatCategory.Movement;
+
         public RunSpeed_Stat(Athletic_Stat athleticStat) : base(athleticStat)
         {
             this.athleticStat = athleticStat;

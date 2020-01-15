@@ -1682,11 +1682,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
+  defaultFloatingWindowPosition: {x: 300, y: 150}
   panelsRoot: {fileID: 1718295592}
   floatingWindowModel: {fileID: 5748592366979156930, guid: 9287ce06349ae0649a8fc632aafd0e04,
     type: 3}
   panelModels:
   - {fileID: 1310323876736360244, guid: 840dc11a0bf72f645aca47cbcedd4945, type: 3}
+  - {fileID: 4462183526151962096, guid: 540a88a1425e0be41877bb793d533be3, type: 3}
 --- !u!1 &1560076987
 GameObject:
   m_ObjectHideFlags: 0
@@ -2042,7 +2044,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   locomotionAnimationSmoothTime: 0.1
-  minRunSpeed: 0
 --- !u!114 &2058927539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2130,6 +2131,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trainable: 1
+  onUpdate:
+    m_PersistentCalls:
+      m_Calls: []
   Athletic:
     baseValue: 0
     expRate: 1
@@ -2358,7 +2362,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   locomotionAnimationSmoothTime: 0.1
-  minRunSpeed: 5
 --- !u!114 &3344151864833139559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2546,8 +2549,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trainable: 1
+  onUpdate:
+    m_PersistentCalls:
+      m_Calls: []
   Athletic:
-    baseValue: 0
+    baseValue: 5
     expRate: 1
 --- !u!1001 &6024532745608269716
 PrefabInstance:

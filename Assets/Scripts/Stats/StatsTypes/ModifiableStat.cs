@@ -23,7 +23,7 @@ namespace LateUpdate.Stats
         /// <summary>
         /// The <see cref="Value"/> without <see cref="StatModifiers"/> effects
         /// </summary>
-        public float BaseValue => baseValue;
+        public virtual float BaseValue => baseValue;
         /// <summary>
         /// Returns the <see cref="BaseValue"/> floored to int
         /// </summary>
@@ -39,7 +39,6 @@ namespace LateUpdate.Stats
                 {
                     lastBaseValue = BaseValue;
                     lastValue = CalculateFinalValue();
-                    onStatChanged.Invoke(this);
                     isDirty = false;
                 }
                 return lastValue;
@@ -95,6 +94,7 @@ namespace LateUpdate.Stats
             isDirty = true;
             statModifiers.Add(mod);
             statModifiers.Sort(CompareModifierOrder);
+            onStatChanged.Invoke(this);
         }
 
         /// <summary>
@@ -107,6 +107,7 @@ namespace LateUpdate.Stats
             if (statModifiers.Remove(mod))
             {
                 isDirty = true;
+                onStatChanged.Invoke(this);
                 return true;
             }
             return false;
@@ -130,6 +131,12 @@ namespace LateUpdate.Stats
                     statModifiers.RemoveAt(i);
                 }
             }
+
+            if (didRemove)
+            {
+                onStatChanged.Invoke(this);
+            }
+
             return didRemove;
         }
         #endregion

@@ -6,6 +6,8 @@ namespace LateUpdate.Stats {
     /// </summary>
     public abstract class Stat
     {
+        public enum StatCategory { Base, Movement, Fight, Production, Invisible}
+
         /// <summary>
         /// The long name of the <see cref="Stat"/>
         /// </summary>
@@ -18,6 +20,10 @@ namespace LateUpdate.Stats {
         /// The float value of the <see cref="Stat"/>
         /// </summary>
         public abstract float Value { get; }
+        /// <summary>
+        /// The <see cref="StatCategory"/> of this <see cref="Stat"/>
+        /// </summary>
+        public abstract StatCategory Category { get; }
         /// <summary>
         /// The int value of the <see cref="Stat"/>
         /// </summary>

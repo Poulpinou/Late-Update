@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using System.Reflection;
 using System.Linq;
 
@@ -12,6 +13,10 @@ namespace LateUpdate.Stats {
         #region Serialized Fields
         [Tooltip("If true, the stats of this container will be automatically trained on action")]
         [SerializeField] bool trainable = true;
+        #endregion
+
+        #region Event
+        public UnityEvent onUpdate = new UnityEvent();
         #endregion
 
         #region Public Properties
@@ -28,8 +33,10 @@ namespace LateUpdate.Stats {
         #region Public Methods
         public virtual void InitStats()
         {
-            InitArrays();
+            RemoveListeners();
             InitLinkedStats();
+            InitArrays();
+            AddListeners();
         }
 
         public TStat GetStat<TStat>(string name = null) where TStat : Stat
@@ -61,6 +68,32 @@ namespace LateUpdate.Stats {
         }
 
         protected abstract void InitLinkedStats();
+
+        protected virtual void OnStatChanged(ModifiableStat stat)
+        {
+            onUpdate.Invoke();
+        }
+
+        protected virtual void AddListeners()
+        {
+            for (int i = 0; i < All.Length; i++)
+            {
+                ModifiableStat stat = All[i] as ModifiableStat;
+                if (stat != null)
+                    stat.onStatChanged.AddListener(OnStatChanged);
+            }
+        }
+
+        protected virtual void RemoveListeners()
+        {
+            if (All == null) return;
+            for (int i = 0; i < All.Length; i++)
+            {
+                ModifiableStat stat = All[i] as ModifiableStat;
+                if (stat != null)
+                    stat.onStatChanged.RemoveListener(OnStatChanged);
+            }
+        }
         #endregion
     }
 }

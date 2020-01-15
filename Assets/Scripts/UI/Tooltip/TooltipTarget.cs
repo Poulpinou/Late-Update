@@ -41,7 +41,8 @@ namespace LateUpdate {
 
         private void OnMouseEnter()
         {
-            Tooltip.Show(TooltipText);
+            if(!EventSystem.current.IsPointerOverGameObject())
+                Tooltip.Show(TooltipText);
         }
 
         private void OnMouseExit()
