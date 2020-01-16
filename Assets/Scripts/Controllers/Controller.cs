@@ -6,7 +6,7 @@ namespace LateUpdate {
     /// <summary>
     /// This class makes the link beetween an object and the <see cref="InputManager"/> and player actions
     /// </summary>
-    public abstract class Controller : MonoBehaviour
+    public abstract class Controller : MonoBehaviour, ICollectionTaggable
     {
         #region Serialized Fields
         [Header("Control")]
@@ -21,7 +21,8 @@ namespace LateUpdate {
         /// <summary>
         /// True if is controlled by player
         /// </summary>
-        public bool IsControlled => InputManager.CurrentController == this;       
+        public bool IsControlled => InputManager.CurrentController == this;
+        public string[] CollectionTags => new string[] { "Controllable" };
         #endregion
 
         #region Public Methods

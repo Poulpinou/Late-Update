@@ -14,6 +14,8 @@ namespace LateUpdate.Stats {
 
         public override StatCategory Category => StatCategory.Movement;
 
+        public override string Unit => "km/h";
+
         public RunSpeed_Stat(Athletic_Stat athleticStat) : base(athleticStat)
         {
             this.athleticStat = athleticStat;

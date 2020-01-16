@@ -7,8 +7,10 @@ namespace LateUpdate {
     /// <summary>
     /// Base class for every interactable items
     /// </summary>
-    public abstract class Interactable : MonoBehaviour, IInteractable
+    public abstract class Interactable : WorldObject, IInteractable
     {
+        public override string[] CollectionTags => new string[]{"Interactable"};
+
         #region Public Methods
         public abstract List<GameAction> GetPossibleActions(Actor actor);
         #endregion

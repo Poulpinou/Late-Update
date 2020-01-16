@@ -27,7 +27,7 @@ namespace LateUpdate.Stats.UI {
         public void RefreshDisplay()
         {
             label.text = useFullName? Stat.Name : Stat.ShortName;
-            value.text = stat.IntValue.ToString();
+            value.text = stat.IntValue.ToString() + stat.Unit;
 
             ModifiableStat modStat = Stat as ModifiableStat;
             if (modStat != null)
@@ -35,12 +35,12 @@ namespace LateUpdate.Stats.UI {
                 int bonusValue = modStat.IntBonusValue;
                 if (bonusValue > 0)
                 {
-                    bonus.text = string.Format("(+{0})", bonusValue);
+                    bonus.text = string.Format("(+{0}{1})", bonusValue, stat.Unit);
                     bonus.color = positiveBonusColor;
                 }
                 else if (bonusValue < 0)
                 {
-                    bonus.text = string.Format("(-{0})", bonusValue);
+                    bonus.text = string.Format("(-{0}{1})", bonusValue, stat.Unit);
                     bonus.color = negativeBonusColor;
                 }
                 else
