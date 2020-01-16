@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace LateUpdate.Cameras {
     public class RTSCameraController : MonoBehaviour
@@ -29,7 +30,7 @@ namespace LateUpdate.Cameras {
         float currentZoom = 10f;
         float currentYaw = 0f;
         Transform target;
-        Controller nearestController;
+        Character nearestCharacter;
         #endregion
 
         #region Public Properties
@@ -40,21 +41,26 @@ namespace LateUpdate.Cameras {
             {
                 target = value;
                 if(target != null)
-                    nearestController = target.GetComponent<Controller>();
+                    nearestCharacter = target.GetComponent<Character>();
             }
         }
 
         public Camera Camera => camera;
         #endregion
 
-        #region Runtime Methods
-        private void Update()
+        #region Private Methods
+        void FindNearestCharacter()
+        {
+            nearestCharacter = WorldObjectManager.RequestObject<Character>("Controllable", request: f => f.OrderByDescending(c => c.Stats.LineOfSight.Value - Vector3.Distance(pivot.position, c.transform.position)));
+        }
+
+        void ListenInputs()
         {
             currentZoom -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
             currentZoom = Mathf.Clamp(currentZoom, minZoom, maxZoom);
             currentYaw -= Input.GetAxis("Roll") * yawSpeed * Time.deltaTime;
 
-            if(target != null)
+            if (target != null)
             {
                 if (Input.GetButtonDown("Horizontal") || Input.GetButtonDown("Vertical"))
                     Target = null;
@@ -66,7 +72,7 @@ namespace LateUpdate.Cameras {
             }
         }
 
-        private void LateUpdate()
+        void ComputeTransforms()
         {
             if (target != null)
             {
@@ -81,33 +87,49 @@ namespace LateUpdate.Cameras {
                     yPos = hit.point.y;
                 }
 
-                Vector3 destination = pivot.position 
+                Vector3 destination = pivot.position
                     + Camera.transform.forward * Input.GetAxis("Vertical")
                     + Camera.transform.right * Input.GetAxis("Horizontal");
 
                 destination.y = yPos;
 
-                if(nearestController != null && Vector3.Distance(nearestController.transform.position, destination) > 5)
+
+
+                if (nearestCharacter == null)
                 {
-                    Vector3 fromOriginToObject = destination - nearestController.transform.position;
-                    fromOriginToObject *= 5 / Vector3.Distance(nearestController.transform.position, destination);
-                    pivot.position = nearestController.transform.position + fromOriginToObject;
+                    FindNearestCharacter();
+                    return;
+                }
+
+                if (Vector3.Distance(nearestCharacter.transform.position, destination) > nearestCharacter.Stats.LineOfSight.Value)
+                {
+                    FindNearestCharacter();
+                    Vector3 fromOriginToObject = destination - nearestCharacter.transform.position;
+                    fromOriginToObject *= (nearestCharacter.Stats.LineOfSight.Value * 0.99f) / Vector3.Distance(nearestCharacter.transform.position, destination);
+                    pivot.position = Vector3.Lerp(pivot.position, nearestCharacter.transform.position + fromOriginToObject, Time.deltaTime * moveSpeed);
                 }
                 else
                 {
                     pivot.position = Vector3.Lerp(pivot.transform.position, destination, Time.deltaTime * moveSpeed);
                 }
-                    
+
             }
-            
+
             camera.transform.position = pivot.position - offset * currentZoom;
             camera.transform.LookAt(pivot.position + Vector3.up * pitch);
             camera.transform.RotateAround(pivot.position, Vector3.up, currentYaw);
         }
+        #endregion
 
-        private void Start()
+        #region Runtime Methods
+        private void Update()
         {
-            Target = InputManager.CurrentController.transform;
+            ListenInputs();
+        }
+
+        private void LateUpdate()
+        {
+            ComputeTransforms();
         }
         #endregion
 
@@ -116,6 +138,11 @@ namespace LateUpdate.Cameras {
         {
             Gizmos.color = Color.blue;
             Gizmos.DrawCube(pivot.position, new Vector3(1, 0.1f, 1));
+
+            if(nearestCharacter != null)
+            {
+                Gizmos.DrawWireSphere(nearestCharacter.transform.position, nearestCharacter.Stats.LineOfSight.Value);
+            }
         }
         #endregion
 
