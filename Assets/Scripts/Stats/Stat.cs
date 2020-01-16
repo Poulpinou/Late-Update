@@ -28,10 +28,14 @@ namespace LateUpdate.Stats {
         /// The int value of the <see cref="Stat"/>
         /// </summary>
         public virtual int IntValue => Mathf.FloorToInt(Value);
+        /// <summary>
+        /// The unit of the value
+        /// </summary>
+        public virtual string Unit => "";
 
         public override string ToString()
         {
-            return Name + " : " + Value;
+            return Name + " : " + Value + Unit;
         }
     }
 }
