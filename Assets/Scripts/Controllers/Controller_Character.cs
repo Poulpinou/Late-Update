@@ -57,7 +57,7 @@ namespace LateUpdate
         {
             if (IsControlled)
             {
-                if (Input.GetKeyDown(KeyCode.S))
+                if (Input.GetKeyDown(KeyCode.L))
                 {
                     UIManager.CreateFloatingPanel<StatPanel>(
                         UIManager.DefaultFloatingWindowPosition,
