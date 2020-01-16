@@ -6,7 +6,12 @@ using System.Linq;
 namespace LateUpdate.Cameras {
     public class RTSCameraController : MonoBehaviour
     {
+        public enum Mode { free, limitedToLineOfSight, followTarget }
+
         #region Serialized Fields
+        [Header("Settings")]
+        [SerializeField] Mode mode;
+
         [Header("Relations")]
         [SerializeField] new Camera camera;
         [SerializeField] Transform pivot;
@@ -40,12 +45,12 @@ namespace LateUpdate.Cameras {
             set
             {
                 target = value;
-                if(target != null)
-                    nearestCharacter = target.GetComponent<Character>();
             }
         }
 
         public Camera Camera => camera;
+
+        public Mode CurrentMode => mode;
         #endregion
 
         #region Private Methods
@@ -60,64 +65,80 @@ namespace LateUpdate.Cameras {
             currentZoom = Mathf.Clamp(currentZoom, minZoom, maxZoom);
             currentYaw -= Input.GetAxis("Roll") * yawSpeed * Time.deltaTime;
 
-            if (target != null)
+            if (mode == Mode.followTarget)
             {
                 if (Input.GetButtonDown("Horizontal") || Input.GetButtonDown("Vertical"))
-                    Target = null;
+                {
+                    mode = Mode.limitedToLineOfSight;
+                }
             }
 
-            if (Input.GetButtonDown("Focus") && InputManager.CurrentController != null)
+            if (Input.GetButtonDown("Focus"))
             {
-                Target = InputManager.CurrentController.transform;
+                if(target == null)
+                    Target = InputManager.CurrentController.transform;
+                mode = Mode.followTarget;
             }
+        }
+
+        Vector3 GetDestinationFromInputAxis()
+        {
+            RaycastHit hit;
+            float yPos = pivot.position.y;
+            if (Physics.Raycast(new Vector3(pivot.position.x, 100, pivot.position.z), Vector3.down, out hit, 200, raycastFilter))
+            {
+                yPos = hit.point.y;
+            }
+
+            Vector3 destination = pivot.position
+                + Camera.transform.forward * Input.GetAxis("Vertical")
+                + Camera.transform.right * Input.GetAxis("Horizontal");
+
+            destination.y = yPos;
+            return destination;
         }
 
         void ComputeTransforms()
         {
-            if (target != null)
+            switch (mode)
             {
-                pivot.transform.position = Vector3.Lerp(pivot.transform.position, target.position, Time.deltaTime * moveSpeed);
-            }
-            else
-            {
-                RaycastHit hit;
-                float yPos = pivot.position.y;
-                if (Physics.Raycast(new Vector3(pivot.position.x, 100, pivot.position.z), Vector3.down, out hit, 200, raycastFilter))
-                {
-                    yPos = hit.point.y;
-                }
+                case Mode.free:
+                    pivot.position = Vector3.Lerp(pivot.transform.position, GetDestinationFromInputAxis(), Time.deltaTime * moveSpeed);
+                    break;
 
-                Vector3 destination = pivot.position
-                    + Camera.transform.forward * Input.GetAxis("Vertical")
-                    + Camera.transform.right * Input.GetAxis("Horizontal");
+                case Mode.limitedToLineOfSight:
+                    Vector3 destination = GetDestinationFromInputAxis();
 
-                destination.y = yPos;
+                    if (nearestCharacter == null)
+                        FindNearestCharacter();
 
+                    if (Vector3.Distance(nearestCharacter.transform.position, destination) > nearestCharacter.Stats.LineOfSight.Value)
+                    {
+                        FindNearestCharacter();
+                        Vector3 fromOriginToObject = destination - nearestCharacter.transform.position;
+                        fromOriginToObject *= (nearestCharacter.Stats.LineOfSight.Value - 0.01f) / Vector3.Distance(nearestCharacter.transform.position, destination);
+                        pivot.position = Vector3.Lerp(pivot.position, nearestCharacter.transform.position + fromOriginToObject, Time.deltaTime * moveSpeed);
+                    }
+                    else
+                    {
+                        pivot.position = Vector3.Lerp(pivot.transform.position, destination, Time.deltaTime * moveSpeed);
+                    }
+                    break;
 
-
-                if (nearestCharacter == null)
-                {
-                    FindNearestCharacter();
-                    return;
-                }
-
-                if (Vector3.Distance(nearestCharacter.transform.position, destination) > nearestCharacter.Stats.LineOfSight.Value)
-                {
-                    FindNearestCharacter();
-                    Vector3 fromOriginToObject = destination - nearestCharacter.transform.position;
-                    fromOriginToObject *= (nearestCharacter.Stats.LineOfSight.Value * 0.99f) / Vector3.Distance(nearestCharacter.transform.position, destination);
-                    pivot.position = Vector3.Lerp(pivot.position, nearestCharacter.transform.position + fromOriginToObject, Time.deltaTime * moveSpeed);
-                }
-                else
-                {
-                    pivot.position = Vector3.Lerp(pivot.transform.position, destination, Time.deltaTime * moveSpeed);
-                }
-
+                case Mode.followTarget:
+                    if (target != null)
+                        pivot.transform.position = Vector3.Lerp(pivot.transform.position, target.position, Time.deltaTime * moveSpeed);
+                    break;
             }
 
             camera.transform.position = pivot.position - offset * currentZoom;
             camera.transform.LookAt(pivot.position + Vector3.up * pitch);
             camera.transform.RotateAround(pivot.position, Vector3.up, currentYaw);
+        }
+
+        void OnCurrentControllerChanged(Controller controller)
+        {
+            target = controller != null ? controller.transform : null;
         }
         #endregion
 
@@ -130,6 +151,12 @@ namespace LateUpdate.Cameras {
         private void LateUpdate()
         {
             ComputeTransforms();
+        }
+
+        private void Start()
+        {
+            Target = InputManager.CurrentController.transform;
+            InputManager.Active.onCurrentControllerChanged.AddListener(OnCurrentControllerChanged);
         }
         #endregion
 
