@@ -6,7 +6,7 @@ using LateUpdate.Stats;
 using LateUpdate.Actions;
 
 namespace LateUpdate {
-    public class Actor : MonoBehaviour, ITooltipable
+    public class Actor : WorldObject, ITooltipable
     {
         #region Serialized Fields
         [Header("Identity")]
@@ -41,6 +41,7 @@ namespace LateUpdate {
         /// The <see cref="StatContainer"/> attached to this <see cref="GameObject"/>
         /// </summary>
         public StatContainer Stats { get; protected set; }
+        public override string[] CollectionTags => new string[] { "Actor" };
         #endregion
 
         #region Public Methods
@@ -92,8 +93,9 @@ namespace LateUpdate {
         #endregion
 
         #region Runtime Methods
-        protected virtual void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             Motor = GetComponent<Motor>();
             Stats = GetComponent<StatContainer>();
             Stats.InitStats();
