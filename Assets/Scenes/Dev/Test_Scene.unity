@@ -1000,11 +1000,8 @@ MonoBehaviour:
   minZoom: 5
   maxZoom: 15
   raycastFilter:
+    serializedVersion: 2
     m_Bits: 256
-  currentZoom: 10
-  currentYaw: 0
-  target: {fileID: 0}
-  nearestCharacter: {fileID: 0}
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0

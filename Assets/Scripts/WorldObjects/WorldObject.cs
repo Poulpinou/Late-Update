@@ -29,7 +29,7 @@ namespace LateUpdate {
         protected virtual void Reset()
         {
             WorldObject previous = GetComponent<WorldObject>();
-            if (previous != null)
+            if (previous != this && previous != null)
             {
                 string message = string.Format(
                     "Can't add {0} component, {1} already have a WorldObject attached on it : {2}",

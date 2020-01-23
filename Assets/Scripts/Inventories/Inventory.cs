@@ -12,8 +12,10 @@ namespace LateUpdate {
     public class Inventory : MonoBehaviour, IInteractable
     {
         #region Serialized Fields
-        //TODO : Move this to stats
-        [SerializeField] float capacity;
+        [Header("Capacity")]
+        [SerializeField] bool modifiedByScript = true;
+        [SerializeField][ConditionalField("modifiedByScript", true)] float capacity;
+        [Header("Content")]
         [Tooltip("Items that exists by default in this inventory")]
         [SerializeField] List<ItemData> defaultItems = new List<ItemData>();
         #endregion
@@ -38,7 +40,14 @@ namespace LateUpdate {
         /// <summary>
         /// The max <see cref="Encumbrance"/> of the inventory
         /// </summary>
-        public float Capacity => capacity;
+        public float Capacity
+        {
+            get => capacity;
+            set {
+                if (modifiedByScript)
+                    capacity = value;
+            }
+        }
         /// <summary>
         /// The datas of every items of the inventory
         /// </summary>

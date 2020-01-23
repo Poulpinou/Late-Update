@@ -95,6 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f64533a7b899d164a891595762ace150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  modifiedByScript: 1
   capacity: 10
   defaultItems:
   - item: {fileID: 11400000, guid: b80e9e5d5e27fb1449d2f592df7e2459, type: 2}
