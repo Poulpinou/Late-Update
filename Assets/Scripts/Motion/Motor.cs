@@ -18,8 +18,30 @@ namespace LateUpdate
         [SerializeField] float followDistance = 1f;
         #endregion
 
+        #region Private Fields
+        IInteractable target;
+        #endregion
+
         #region Public Properties
-        public Transform Target { get; private set; }
+        public IInteractable Target {
+            get => target;
+            private set
+            {
+                target = value;
+                if (target != null)
+                {
+                    TargetArea = target.GetInteractionArea();
+                    TargetTransform = TargetArea.point;
+                }
+                else
+                {
+                    TargetArea = default;
+                    TargetTransform = null;
+                }
+            }
+        }
+        public InteractionArea TargetArea { get; private set; }
+        public Transform TargetTransform { get; private set; }
         public NavMeshAgent Agent => agent;
         #endregion
 
@@ -84,15 +106,11 @@ namespace LateUpdate
         #endregion
 
         #region Private Methods
-        void FaceTarget()
-        {
-            Vector3 direction = (Target.position - transform.position).normalized;
-            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
-        }
-
         protected bool PathComplete()
         {
+            if (TargetArea.PointIsInArea(transform.position))
+                return true;
+
             if (!Agent.pathPending && Agent.remainingDistance <= destinationThreshold + Agent.stoppingDistance)
             {
                 if (!Agent.hasPath || Agent.velocity.sqrMagnitude == 0f)
@@ -104,30 +122,29 @@ namespace LateUpdate
         #endregion
 
         #region Coroutines
-        public IEnumerator ReachTarget(IInteractable newTarget, Action callback = null)
+        IEnumerator ReachTarget(IInteractable newTarget, Action callback = null)
         {
             Clear();
 
-            InteractionArea area = newTarget.GetInteractionArea();
-
-            Agent.stoppingDistance = area.radius;
-            Target = area.point;
-            Agent.SetDestination(Target.position);
+            Target = newTarget;
+            
+            Agent.stoppingDistance = TargetArea.radius;
+            
+            Agent.SetDestination(TargetArea.point.position);
 
             while (!PathComplete())
             {
-                Agent.SetDestination(Target.position);
+                Agent.SetDestination(TargetArea.point.position);
 
                 yield return null;
             }
-
             StopFollowingTarget();
 
             if (callback != null)
                 callback.Invoke();
         }
 
-        public IEnumerator ReachPoint(Vector3 point, Action callback = null)
+        IEnumerator ReachPoint(Vector3 point, Action callback = null)
         {
             Clear();
             Agent.SetDestination(point);
@@ -138,19 +155,17 @@ namespace LateUpdate
                 callback.Invoke();
         }
 
-        public IEnumerator KeepFollowingTarget(IInteractable newTarget)
+        IEnumerator KeepFollowingTarget(IInteractable newTarget)
         {
             Clear();
 
-            InteractionArea area = newTarget.GetInteractionArea();
+            Target = newTarget;
+            Agent.stoppingDistance = TargetArea.radius + followDistance;
 
-            Agent.stoppingDistance = area.radius + followDistance;
-            Target = area.point;
-
-            while (Target != null)
+            while (TargetTransform != null)
             {
-                Debug.Log("Follow...");
-                Agent.SetDestination(Target.position);
+                Debug.Log(TargetTransform.position);
+                Agent.SetDestination(TargetTransform.position);
                 yield return null;
             }
         }

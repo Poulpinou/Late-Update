@@ -14,6 +14,10 @@ namespace LateUpdate {
         [SerializeField] Camera faceCamera;
         #endregion
 
+        #region Private Fields
+        Coroutine actionCoroutine;
+        #endregion
+
         #region Public Properties
         public ActorInfos Infos => infos;
         public Camera FaceCamera => faceCamera;
@@ -66,7 +70,7 @@ namespace LateUpdate {
                 CurrentAction = action;
             }
 
-            StartCoroutine(CurrentAction.Execute(OnCurrentActionDone));
+            actionCoroutine = StartCoroutine(CurrentAction.Execute(OnCurrentActionDone));
         }
 
         /// <summary>
@@ -76,7 +80,7 @@ namespace LateUpdate {
         {
             if (CurrentAction == null) return;
 
-            StopAllCoroutines();
+            StopCoroutine(actionCoroutine);
             CurrentAction.Stop();
             CurrentAction = null;
         }
@@ -85,10 +89,13 @@ namespace LateUpdate {
         #region Private Methods
         void OnCurrentActionDone(GameAction.ExitStatus exitStatus)
         {
-            if (exitStatus == GameAction.ExitStatus.hasNextAction)
-                PerformAction(CurrentAction.NextAction);
-            else
-                CurrentAction = null;
+            //Debug.Log(CurrentAction.Name + " => " +(CurrentAction.HasNextAction? CurrentAction.NextAction.Name : "none"));
+            GameAction lastAction = CurrentAction;
+            CurrentAction = null;
+            StopCoroutine(actionCoroutine);
+
+            if (exitStatus == GameAction.ExitStatus.hasNextAction && lastAction.NextAction != null)
+                PerformAction(lastAction.NextAction);
         }
         #endregion
 

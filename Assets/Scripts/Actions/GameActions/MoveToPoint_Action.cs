@@ -4,17 +4,18 @@ using UnityEngine;
 namespace LateUpdate.Actions {
     public class MoveToPoint_Action : GameAction
     {
-        Vector2 point;
+        Vector3 point;
+        bool isDone;
 
         public override string Name => "Move to";
 
         public override bool NeedsContact => false;
 
-        public MoveToPoint_Action(Actor actor, Vector2 point) : base(actor, null) {
+        public MoveToPoint_Action(Actor actor, Vector3 point) : base(actor, null) {
             this.point = point;
         }
 
-        protected override IEnumerator OnExecute()
+        protected override void OnStart()
         {
             if (!Actor.CanMove)
             {
@@ -22,11 +23,12 @@ namespace LateUpdate.Actions {
                 Debug.Log(string.Format("{0} can't move", Actor.Infos.name));
             }
 
-            yield return Actor.Motor.ReachPoint(point);
+            Actor.Motor.GoTo(point, () => isDone = true);
         }
 
-        protected override void OnDone(ExitStatus exitStatus)
+        protected override bool OnDoneCheck()
         {
+            return isDone;
         }
     }
 }

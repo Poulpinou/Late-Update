@@ -56,5 +56,10 @@ namespace LateUpdate {
             closeButton.onClick.AddListener(Panel.Close);
             panelName.text = Panel.PanelName;
         }
+
+        public void Close()
+        {
+            Destroy(gameObject);
+        }
     }
 }

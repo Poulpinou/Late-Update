@@ -16,7 +16,7 @@ namespace LateUpdate {
         public virtual void Close()
         {
             if (FloatingWindow != null)
-                Destroy(FloatingWindow.gameObject);
+                FloatingWindow.Close();
             else
                 Destroy(gameObject);
         }

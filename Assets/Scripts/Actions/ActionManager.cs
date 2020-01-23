@@ -15,6 +15,11 @@ namespace LateUpdate.Actions {
 
         [Header("Settings")]
         [SerializeField] bool autoPerformIfSingleAction = false;
+        [SerializeField] float defaultActionUpdateTime = 0.5f;
+        #endregion
+
+        #region Static Properties
+        public static float DefaultActionUpdateTime => Active.defaultActionUpdateTime;
         #endregion
 
         #region Static Methods
@@ -59,7 +64,7 @@ namespace LateUpdate.Actions {
             if (actions.Count == 0) return null;
             if(Active.autoPerformIfSingleAction && actions.Count == 1)
             {
-                actions[0].Run();
+                actions[0].Actor.PerformAction(actions[0]);
                 return null;
             }
 
