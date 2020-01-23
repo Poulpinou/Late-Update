@@ -48,6 +48,7 @@ namespace LateUpdate {
                     capacity = value;
             }
         }
+        public float AvailableSpace => Capacity - Encumbrance;
         /// <summary>
         /// The datas of every items of the inventory
         /// </summary>
@@ -55,6 +56,22 @@ namespace LateUpdate {
         #endregion
 
         #region Public Methods
+        public ItemData GetDataFromItem(Item item)
+        {
+            return itemDatas.Where(i => i.Item == item).FirstOrDefault();
+        }
+
+        public void AddMax(ref ItemData itemData)
+        {
+            ItemData datasToAdd = itemData.TakeAmount(MaxAddableAmount(itemData.Item));
+            Add(datasToAdd);
+        }
+
+        public int MaxAddableAmount(Item item)
+        {
+            return Mathf.FloorToInt(AvailableSpace / item.encumbrance);
+        }
+
         /// <summary>
         /// Adds <paramref name="amount"/> x <paramref name="item"/> to the <see cref="Inventory"/>
         /// </summary>
@@ -71,20 +88,23 @@ namespace LateUpdate {
         /// </summary>
         /// <param name="itemData">Datas to add</param>
         /// <returns>True if success</returns>
-        public bool Add(ItemData itemData)
+        public virtual bool Add(ItemData itemData)
         {
             if (!CanAdd(itemData)) return false;
+            if (itemData.Amount <= 0) return true;        
 
-            ItemData localData = itemDatas.Where(i => i.Item == itemData.Item).FirstOrDefault();
-
-            if (localData == null)
+            if(itemData.Inventory == null || itemData.Inventory.Remove(itemData))
             {
-                itemData.Inventory = this;
-                itemDatas.Add(itemData);
-            }
-            else
-            {
-                localData.Amount += itemData.Amount;
+                ItemData localData = GetDataFromItem(itemData.Item);
+                if (localData == null)
+                {
+                    itemData.Inventory = this;
+                    itemDatas.Add(itemData);
+                }
+                else
+                {
+                    localData.Amount += itemData.Amount;
+                }
             }
 
             UpdateInventory();
@@ -96,9 +116,9 @@ namespace LateUpdate {
         /// </summary>
         /// <param name="itemData">Datas to remove</param>
         /// <returns>True if success</returns>
-        public bool Remove(ItemData itemData)
+        public virtual bool Remove(ItemData itemData)
         {
-            ItemData localData = itemDatas.Where(i => i.Item == itemData.Item).FirstOrDefault();
+            ItemData localData = GetDataFromItem(itemData.Item);
             if (localData == null)
             {
                 MessageManager.Send(string.Format(
@@ -123,7 +143,7 @@ namespace LateUpdate {
         /// Drops <paramref name="data"/> from <see cref="Inventory"/> and spawns a <see cref="Pickable"/> on the floor
         /// </summary>
         /// <param name="data">Datas to drop</param>
-        public void Drop(ItemData data)
+        public virtual void Drop(ItemData data)
         {
             if (Remove(data))
             {
@@ -137,7 +157,7 @@ namespace LateUpdate {
         /// </summary>
         /// <param name="itemData">The datas to add</param>
         /// <returns>True if can add</returns>
-        public bool CanAdd(ItemData itemData)
+        public virtual bool CanAdd(ItemData itemData)
         {
             if (itemData.Inventory == this)
             {

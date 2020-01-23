@@ -62,11 +62,7 @@ namespace LateUpdate {
         /// <returns>True if success</returns>
         public bool MoveTo(Inventory inventory)
         {
-            if(inventory.CanAdd(this) && Inventory.Remove(this))
-            {
-                return inventory.Add(this);
-            }
-            return false;
+            return inventory.Add(this);
         }
 
         /// <summary>

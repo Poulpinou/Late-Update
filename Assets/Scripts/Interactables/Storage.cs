@@ -17,6 +17,15 @@ namespace LateUpdate {
 
             actions.Add(new Trade_Action(actor, Inventory));
 
+            TypedInventory typedInventory = Inventory as TypedInventory;
+            if (typedInventory != null)
+            {
+                foreach(Item item in typedInventory.AllowedItems)
+                {
+                    actions.Add(new Haul_Action(actor, this, item));
+                }
+            }
+
             return actions;
         }
 

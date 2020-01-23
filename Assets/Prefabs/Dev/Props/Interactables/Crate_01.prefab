@@ -126,7 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactionArea:
     point: {fileID: 3971470985209882592}
-    radius: 1
+    radius: 2
 --- !u!65 &4164364811658793944
 BoxCollider:
   m_ObjectHideFlags: 0
