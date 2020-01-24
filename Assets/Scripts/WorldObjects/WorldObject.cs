@@ -28,17 +28,20 @@ namespace LateUpdate {
 
         protected virtual void Reset()
         {
-            WorldObject previous = GetComponent<WorldObject>();
-            if (previous != this && previous != null)
+            WorldObject[] previous = GetComponents<WorldObject>();
+            for (int i = 0; i < previous.Length; i++)
             {
-                string message = string.Format(
-                    "Can't add {0} component, {1} already have a WorldObject attached on it : {2}",
-                    GetType().Name,
-                    gameObject.name,
-                    previous.GetType().Name
-                );
-                DestroyImmediate(this);
-                throw new Exception(message);
+                if (previous[i] != this)
+                {
+                    string message = string.Format(
+                        "Can't add {0} component, {1} already have a WorldObject attached on it : {2}",
+                        GetType().Name,
+                        gameObject.name,
+                        previous.GetType().Name
+                    );
+                    DestroyImmediate(this);
+                    throw new Exception(message);
+                }
             }
         }
 

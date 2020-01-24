@@ -62,7 +62,7 @@ namespace LateUpdate.Editors {
                     serializedObject.ApplyModifiedProperties();
                 }
 
-                if (GUILayout.Button("-", EditorStyles.toolbarButton))
+                if (GUILayout.Button("X", EditorStyles.toolbarButton))
                 {
                     serializedObject.FindProperty("dropChances").DeleteArrayElementAtIndex(index);
                     serializedObject.ApplyModifiedProperties();

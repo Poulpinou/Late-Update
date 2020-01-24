@@ -61,6 +61,11 @@ namespace LateUpdate {
             return itemDatas.Where(i => i.Item == item).FirstOrDefault();
         }
 
+        public bool Contains(Item item)
+        {
+            return itemDatas.Any(i => i.Item == item);
+        }
+
         public void AddMax(ref ItemData itemData)
         {
             ItemData datasToAdd = itemData.TakeAmount(MaxAddableAmount(itemData.Item));
