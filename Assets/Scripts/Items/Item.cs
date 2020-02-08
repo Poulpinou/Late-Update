@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -20,9 +21,14 @@ namespace LateUpdate {
         #endregion
 
         #region Public Methods
-        public virtual void Use()
+        public virtual void Use(Actor actor)
         {
-            Debug.Log("Using " + itemName);
+            throw new Exception(string.Format("{0} is using {1} : Nothing happens", actor.Infos.name, itemName));
+        }
+
+        public virtual void UseOn(Actor actor, WorldObject target)
+        {
+            throw new Exception(string.Format("{0} can't use {1} on {2}", actor.Infos.name, itemName, target.name));
         }
         #endregion
 

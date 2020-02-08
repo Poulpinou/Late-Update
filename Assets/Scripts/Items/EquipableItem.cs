@@ -19,11 +19,19 @@ namespace LateUpdate {
         #endregion
 
         #region Public Methods
-        public override void Use()
+        public override void Use(Actor actor)
         {
-            //Equipment equipment = InputManager.CurrentController.GetComponent<Equipment>();
-            //equipment.Equip(this);
-            //RemoveFromInventory();
+            actor.DoOnWorldObjectComponent<Equipment>(e => e.Equip(this));
+        }
+
+        internal virtual void OnEquip(Equipment equipment)
+        {
+
+        }
+
+        internal virtual void OnUnequip(Equipment equipment)
+        {
+
         }
         #endregion
 
