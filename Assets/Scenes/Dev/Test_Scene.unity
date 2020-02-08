@@ -650,9 +650,7 @@ MonoBehaviour:
   - item: {fileID: 11400000, guid: 9f2d6eaaac104b44baeab356935c6dfd, type: 2}
     weight: 0.87
   - item: {fileID: 11400000, guid: b80e9e5d5e27fb1449d2f592df7e2459, type: 2}
-    weight: 0.62
-  - item: {fileID: 11400000, guid: 10c97c59b06159748b3034804fb32eb0, type: 2}
-    weight: 0.18
+    weight: 0.19
 --- !u!114 &640538143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -665,6 +663,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9ff2fdb7cf831458000a4956eb2276, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  harvestHardness: 1
+  harvestableAmount: 20
   requiredItems: []
 --- !u!65 &640538144
 BoxCollider:
@@ -1828,6 +1828,11 @@ PrefabInstance:
         type: 3}
       propertyPath: infos.name
       value: "Mich\xE8le"
+      objectReference: {fileID: 0}
+    - target: {fileID: 6739788152643711608, guid: 22351e23b0ce8894eb4c8addae5bcd1e,
+        type: 3}
+      propertyPath: defaultItems.Array.size
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22351e23b0ce8894eb4c8addae5bcd1e, type: 3}
@@ -3223,14 +3228,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6739788152643711591, guid: 22351e23b0ce8894eb4c8addae5bcd1e,
-        type: 3}
-      propertyPath: Perception.baseValue
-      value: 20
-      objectReference: {fileID: 0}
     - target: {fileID: 6739788152643711608, guid: 22351e23b0ce8894eb4c8addae5bcd1e,
         type: 3}
       propertyPath: defaultItems.Array.data[2].amount
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6739788152643711591, guid: 22351e23b0ce8894eb4c8addae5bcd1e,
+        type: 3}
+      propertyPath: Perception.baseValue
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6739788152643711612, guid: 22351e23b0ce8894eb4c8addae5bcd1e,

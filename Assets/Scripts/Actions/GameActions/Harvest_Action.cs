@@ -7,7 +7,6 @@ namespace LateUpdate.Actions {
     public class Harvest_Action : GameAction
     {
         Harvestable harvestable;
-        AnimationClip animationClip;
         Inventory inventory;
         Harvest_Stat stat;
         bool isDone = false;
@@ -16,10 +15,9 @@ namespace LateUpdate.Actions {
         public override string Name => "Harvest";
         public override float WaitingTime => harvestTime;
 
-        public Harvest_Action(Actor actor, Harvestable harvestable, AnimationClip animationClip) : base(actor, harvestable)
+        public Harvest_Action(Actor actor, Harvestable harvestable) : base(actor, harvestable)
         {
             this.harvestable = harvestable;
-            this.animationClip = animationClip;
         }
 
         protected override void OnStart()
@@ -33,6 +31,8 @@ namespace LateUpdate.Actions {
 
             stat = Actor.GetComponent<StatContainer>().GetStat<Harvest_Stat>();
             harvestTime = harvestable.ComputeHarvestSpeed(stat.IntValue);
+
+            Actor.DoOnWorldObjectComponent<ActorAnimator>(a => a.Animator.SetTrigger("StartUse"));           
         }
 
         protected override void InitTrainers()
@@ -54,6 +54,12 @@ namespace LateUpdate.Actions {
             {
                 isDone = true;
             }
+        }
+
+        protected override void OnDone(ExitStatus exitStatus)
+        {
+            Debug.Log("passe");
+            Actor.DoOnWorldObjectComponent<ActorAnimator>(a => a.Animator.SetTrigger("StopUse"));
         }
 
         protected override bool OnDoneCheck()

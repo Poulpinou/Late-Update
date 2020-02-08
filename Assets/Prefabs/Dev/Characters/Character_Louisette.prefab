@@ -83,6 +83,9 @@ MonoBehaviour:
   Perception:
     baseValue: 5
     expRate: 0.68
+  Harvest:
+    baseValue: 0
+    expRate: 1
 --- !u!114 &6739788152643711608
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -6,7 +6,8 @@ namespace LateUpdate {
     /// <summary>
     /// This class makes the link beetween an object and the <see cref="InputManager"/> and player actions
     /// </summary>
-    public abstract class Controller : MonoBehaviour, ICollectionTaggable
+    [RequireComponent(typeof(Actor))]
+    public abstract class Controller : WorldObjectComponent, ICollectionTaggable
     {
         #region Serialized Fields
         [Header("Control")]
@@ -47,7 +48,5 @@ namespace LateUpdate {
         protected abstract void AddListeners();
         protected abstract void RemoveListeners();
         #endregion
-
-        
     }
 }

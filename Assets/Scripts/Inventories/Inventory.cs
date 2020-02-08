@@ -9,7 +9,7 @@ namespace LateUpdate {
     /// <summary>
     /// Attach this to a <see cref="GameObject"/> to provide it an inventory
     /// </summary>
-    public class Inventory : MonoBehaviour, IInteractable
+    public class Inventory : WorldObjectComponent, IInteractable
     {
         #region Serialized Fields
         [Header("Capacity")]
@@ -226,7 +226,7 @@ namespace LateUpdate {
         #endregion
 
         #region Runtime Methods
-        private void Awake()
+        protected override void Awake()
         {
             InitializeDatas();
             UpdateInventory();

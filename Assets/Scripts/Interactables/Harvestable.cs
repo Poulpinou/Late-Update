@@ -10,7 +10,6 @@ namespace LateUpdate {
         [SerializeField][Min(0.1f)] float harvestHardness = 1;
         [SerializeField] int harvestableAmount;
         [SerializeField] Item[] requiredItems;
-        [SerializeField] AnimationClip animationClip;
 
         public DropContainer DropContainer { get; protected set; }
 
@@ -38,7 +37,7 @@ namespace LateUpdate {
 
             if (canExtract)
             {
-                actions.Add(new Harvest_Action(actor, this, animationClip));
+                actions.Add(new Harvest_Action(actor, this));
             }
 
             return actions;

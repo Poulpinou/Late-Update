@@ -10,7 +10,7 @@ namespace LateUpdate
     /// This class is required to move an object and interact with <see cref="NavMeshAgent"/>
     /// </summary>
     [RequireComponent(typeof(NavMeshAgent))]
-    public class Motor : MonoBehaviour
+    public class Motor : WorldObjectComponent
     {
         #region Serialized Fields
         [SerializeField] NavMeshAgent agent;
