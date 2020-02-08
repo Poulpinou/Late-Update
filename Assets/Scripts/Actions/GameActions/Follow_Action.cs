@@ -11,7 +11,7 @@ namespace LateUpdate.Actions {
 
         public Follow_Action(Actor actor, IInteractable interactable) : base(actor, interactable) { }
 
-        protected override IEnumerator OnExecute()
+        protected override void OnStart()
         {
             if (!Actor.CanMove)
             {
@@ -19,9 +19,17 @@ namespace LateUpdate.Actions {
                 Debug.Log(string.Format("{0} can't move", Actor.Infos.name));
             }
 
-            IEnumerator coroutine = Actor.Motor.KeepFollowingTarget(Target);
-            while (coroutine.MoveNext())
-                yield return null;
+            Actor.Motor.GoTo(Target);
+        }
+
+        protected override void OnDone(ExitStatus exitStatus)
+        {
+            Actor.Motor.StopFollowingTarget();
+        }
+
+        protected override void OnRun()
+        {
+            Actor.Motor.GoTo(Target);
         }
 
         protected override void InitTrainers()
@@ -30,6 +38,11 @@ namespace LateUpdate.Actions {
             StatContainer statContainer = Actor.GetComponent<StatContainer>();
 
             trainers.Add(new Trainer(statContainer.GetStat<Athletic_Stat>(), 1));
+        }
+
+        protected override bool OnDoneCheck()
+        {
+            return false;
         }
     }
 }

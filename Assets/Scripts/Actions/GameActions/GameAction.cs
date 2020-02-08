@@ -48,6 +48,9 @@ namespace LateUpdate.Actions {
         public GameAction NextAction { get; protected set; }
 
         public bool HasNextAction => NextAction != null;
+
+        public virtual float WaitingTime => ActionManager.DefaultActionUpdateTime;
+        public bool IsDone { get; set; }
         #endregion
 
         #region Constructors
@@ -70,14 +73,6 @@ namespace LateUpdate.Actions {
 
         #region Public Methods
         /// <summary>
-        /// Call this method to tell the <see cref="Actor"/> to perform this action
-        /// </summary>
-        public void Run()
-        {
-            Actor.PerformAction(this);
-        }
-
-        /// <summary>
         /// Executes this action and invoke <paramref name="callback"/> when it's done
         /// </summary>
         /// <param name="callback">Action to do when action is done</param>
@@ -86,24 +81,27 @@ namespace LateUpdate.Actions {
             this.callback = callback;
 
             StatContainer statContainer = Actor.GetComponent<StatContainer>();
-            if(statContainer.Trainable)
+            if(statContainer != null && statContainer.Trainable)
                 InitTrainers();
 
-            if(trainers != null && trainers.Count > 0)
+            OnStart();
+            while (!IsDone)
             {
-                IEnumerator coroutine = OnExecute();
-                while (coroutine.MoveNext())
+                if(trainers != null)
                 {
                     for (int i = 0; i < trainers.Count; i++)
                     {
                         trainers[i].Update();
                     }
-                    yield return null;
+                    OnTrain();
                 }
-            }
-            else
-            {
-                yield return OnExecute();
+                OnRun();
+
+                IsDone = OnDoneCheck();
+                if (!IsDone)
+                    yield return new WaitForSeconds(WaitingTime);
+                else
+                    yield return null;
             }
             Stop(HasNextAction? ExitStatus.hasNextAction : ExitStatus.done);
         }
@@ -129,15 +127,15 @@ namespace LateUpdate.Actions {
             trainers = new List<Trainer>();
         }
 
+        protected abstract bool OnDoneCheck();
+
+        protected virtual void OnStart() { }
+        protected virtual void OnRun() { }
+        protected virtual void OnTrain() { }
         /// <summary>
         /// Override this method if your custom action should do something when it's done
         /// </summary>
         protected virtual void OnDone(ExitStatus exitStatus) { }
-
-        /// <summary>
-        /// Override this method with your custom action behaviour
-        /// </summary>
-        protected abstract IEnumerator OnExecute();
         #endregion
     }
 }

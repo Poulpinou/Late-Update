@@ -36,6 +36,7 @@ namespace LateUpdate
             }
             else
             {
+                Character.StopAction();
                 Character.Motor.MoveToPoint(hit.point);
                 //Character.PerformAction(new MoveToPoint_Action(Character, hit.point));
             }
@@ -48,9 +49,9 @@ namespace LateUpdate
         #endregion
 
         #region Runtime Methods
-        protected virtual void Awake()
+        protected override void Awake()
         {
-            Character = GetComponent<Character>();
+            Character = Owner as Character;
         }
 
         protected virtual void Update()

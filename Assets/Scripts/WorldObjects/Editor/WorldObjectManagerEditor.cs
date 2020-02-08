@@ -31,6 +31,7 @@ namespace LateUpdate.Editors {
                     int i = 1;
                     foreach(WorldObject worldObject in collection.Value)
                     {
+                        if (worldObject == null) continue;
                         EditorGUILayout.BeginHorizontal();
                         GUILayout.Label(i + "-" + worldObject.name, EditorStyles.label);
                         if (GUILayout.Button("See", EditorStyles.miniButton))

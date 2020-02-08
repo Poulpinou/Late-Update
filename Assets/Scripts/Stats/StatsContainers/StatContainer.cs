@@ -8,7 +8,7 @@ namespace LateUpdate.Stats {
     /// <summary>
     /// Attach a child of this component to and object to provide it some stats
     /// </summary>
-    public abstract class StatContainer : MonoBehaviour
+    public abstract class StatContainer : WorldObjectComponent
     {
         #region Serialized Fields
         [Tooltip("If true, the stats of this container will be automatically trained on action")]

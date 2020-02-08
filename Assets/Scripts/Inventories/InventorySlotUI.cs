@@ -96,7 +96,7 @@ namespace LateUpdate {
         #region Private Methods
         void Onclick()
         {
-            datas.Item.Use();
+            datas.Use();
         }
         #endregion
 

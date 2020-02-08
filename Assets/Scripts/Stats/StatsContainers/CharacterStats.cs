@@ -9,6 +9,7 @@ namespace LateUpdate.Stats {
         //Base Stats
         public Athletic_Stat Athletic;
         public Perception_Stat Perception;
+        public Harvest_Stat Harvest;
 
         //Linked Stats
         public RunSpeed_Stat RunSpeed;

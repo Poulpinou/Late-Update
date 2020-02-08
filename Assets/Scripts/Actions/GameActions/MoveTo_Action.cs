@@ -11,20 +11,24 @@ namespace LateUpdate.Actions {
 
         public MoveTo_Action(Actor actor, IInteractable target, GameAction nextAction = null) : base(actor, target, nextAction) { }
 
-        protected override IEnumerator OnExecute()
+        protected override void OnStart()
         {
             if (!Actor.CanMove)
             {
                 Actor.StopAction();
                 Debug.Log(string.Format("{0} can't move", Actor.Infos.name));
             }
-
-            yield return Actor.Motor.ReachTarget(Target);
+            Actor.Motor.GoTo(Target);
         }
 
         protected override void OnDone(ExitStatus exitStatus)
         {
-            Actor.Motor.Clear();
+            Actor.Motor.StopFollowingTarget();
+        }
+
+        protected override bool OnDoneCheck()
+        {
+            return Target.CanInteract(Actor);
         }
 
         protected override void InitTrainers()

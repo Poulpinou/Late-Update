@@ -8,6 +8,7 @@ namespace LateUpdate.Actions {
     public class Trade_Action : GameAction
     {
         Inventory inventory;
+        FloatingWindow window;
 
         public override string Name => "Trade";
 
@@ -16,17 +17,15 @@ namespace LateUpdate.Actions {
             inventory = target;
         }
 
-        protected override IEnumerator OnExecute()
+        protected override void OnStart()
         {
-            UIManager.CreateFloatingPanel<InventoryPanel>(
-                Camera.main.WorldToScreenPoint(Target.gameObject.transform.position),
+            window = UIManager.CreateFloatingPanel<InventoryPanel>(
+                UIManager.DefaultFloatingWindowPosition,
                 i => {
                     i.LinkInventory(inventory);
                     i.CloseCondition = IsTooFar;
                 }
             );
-
-            yield break;
         }
 
         bool IsTooFar()
@@ -34,9 +33,9 @@ namespace LateUpdate.Actions {
             return Vector3.Distance(Actor.transform.position, Target.gameObject.transform.position) > 5;
         }
 
-        protected override void OnDone(ExitStatus exitStatus)
+        protected override bool OnDoneCheck()
         {
-            
+            return window == null || IsTooFar();
         }
     }
     

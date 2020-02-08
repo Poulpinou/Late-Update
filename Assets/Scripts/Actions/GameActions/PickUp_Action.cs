@@ -15,19 +15,18 @@ namespace LateUpdate.Actions {
             _pickable = pickable;
         }
 
-        protected override IEnumerator OnExecute()
+        protected override void OnStart()
         {
             if (_inventory.Add(_pickable.ItemData))
             {
                 GameObject.Destroy(_pickable.gameObject);
             }
-
-            yield return null;
         }
 
-        protected override void OnDone(ExitStatus exitStatus)
+
+        protected override bool OnDoneCheck()
         {
-            
+            return true;
         }
     }
 }

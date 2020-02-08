@@ -62,11 +62,7 @@ namespace LateUpdate {
         /// <returns>True if success</returns>
         public bool MoveTo(Inventory inventory)
         {
-            if(inventory.CanAdd(this) && Inventory.Remove(this))
-            {
-                return inventory.Add(this);
-            }
-            return false;
+            return inventory.Add(this);
         }
 
         /// <summary>
@@ -110,6 +106,37 @@ namespace LateUpdate {
             go.AddComponent<TooltipTarget>();
 
             return pickable;
+        }
+
+        public void Use()
+        {
+            try
+            {
+                Item.Use(Inventory.Owner as Actor);
+                amount--;
+                if (Inventory != null)
+                    Inventory.UpdateInventory();
+            }
+            catch (Exception e)
+            {
+                MessageManager.Send(e.Message, LogType.Log);
+            }
+            
+        }
+
+        public void UseOn(WorldObject target)
+        {
+            try
+            {
+                Item.UseOn(Inventory.Owner as Actor, target);
+                amount--;
+                if (Inventory != null)
+                    Inventory.UpdateInventory();
+            }
+            catch (Exception e)
+            {
+                MessageManager.Send(e.Message, LogType.Log);
+            }
         }
         #endregion
     }

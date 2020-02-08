@@ -34,7 +34,7 @@ namespace LateUpdate.Actions {
         #region Private Methods
         void OnActionClick(GameAction action)
         {
-            action.Run();
+            action.Actor.PerformAction(action);
             Destroy(gameObject);
         }
         #endregion
